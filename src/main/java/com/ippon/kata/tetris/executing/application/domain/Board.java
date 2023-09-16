@@ -66,7 +66,6 @@ public record Board(
                 final boolean emptySlot = emptySlot(position);
                 final boolean tetrominoAlreadyAtThisSlot =
                     tetrominoAlreadyAtThisSlot(movedTetromino, position);
-                LOGGER.debug("{},{},{}", position, emptySlot, tetrominoAlreadyAtThisSlot);
                 return emptySlot || tetrominoAlreadyAtThisSlot;
               } else {
                 return false;
@@ -133,19 +132,21 @@ public record Board(
                     .forEach(
                         j -> {
                           final Position position = new Position(j, i);
-                          if(i<from){
-                            updatedBoard2.put(new Position(j, i+translateOffset), slots.get(position));
+                          if (i < from) {
+                            updatedBoard2.put(
+                                new Position(j, i + translateOffset), slots.get(position));
                             updatedBoard2.put(new Position(j, i), Optional.empty());
-                          }else {
+                          } else {
                             updatedBoard2.put(position, slots.get(position));
                           }
                         }));
     return new Board(boardId, updatedBoard2, fallingTetromino);
   }
+
   static IntStream revRange(int from, int to) {
-    return IntStream.range(from, to)
-        .map(i -> to - i + from - 1);
+    return IntStream.range(from, to).map(i -> to - i + from - 1);
   }
+
   public List<LineIndex> lineToErase() {
     return slots.entrySet().stream()
         .collect(

@@ -19,6 +19,7 @@ public record Tetromino(
 
   public static final int MOVE_OFFSET = 1;
   public static final int LOW_LIMIT = 0;
+  public static final int NB_COLUMN = 10;
 
   public Tetromino(Shape shape) {
     this(
@@ -42,16 +43,16 @@ public record Tetromino(
   }
 
   public Tetromino move(Direction direction, Map<Position, Optional<Tetromino>> slots) {
-    return switch (direction) {
+     return switch (direction) {
       case DOWN -> moveDown();
       case LEFT -> moveLeft(slots);
-      case ROTATE -> rotate(slots);
+      case ROTATE ->  rotate(slots);
       case RIGHT -> moveRight(slots);
     };
   }
 
   private Tetromino rotate(Map<Position, Optional<Tetromino>> slots) {
-    final List<Position> roratedPositions = roratedPositions();
+    final List<Position> roratedPositions = rotatedPositions();
     if (cannotRotate(roratedPositions, slots)) {
       return this;
     } else {
@@ -64,11 +65,11 @@ public record Tetromino(
     return outOfRange(roratedPositions) || tetrominoTouched(slots, Position::x, roratedPositions);
   }
 
-  private static boolean outOfRange(List<Position> roratedPositions) {
-    return roratedPositions.stream().anyMatch(position -> position.x() < 0 || position.y() < 0);
+  private static boolean outOfRange(List<Position> positions) {
+    return positions.stream().anyMatch(position -> position.x() < 0 || position.y() < 0 || position.x() >= NB_COLUMN);
   }
 
-  private List<Position> roratedPositions() {
+  private List<Position> rotatedPositions() {
     List<Position> rotatedPositions = new ArrayList<>();
     final List<Position> positions1 = shape().translatedRotationPositions(rotationIndex);
     for (int i = 0; i < positions().size(); i++) {
