@@ -23,7 +23,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ExecutingGameStartedListener {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ExecutingGameStartedListener.class);
+  public static final int GAME_SPEED = 1000;
   private final InitializeBoardUseCase initializeBoardUseCase;
   private final PickTetrominoUseCase pickTetrominoUseCase;
   private final FallTetrominoUseCase fallTetrominoUseCase;
@@ -67,7 +69,7 @@ public class ExecutingGameStartedListener {
     fallTetrominoUseCase.fall(new BoardId(gameId), tetrominoPickedEvent.tetromino());
     while (roundIndex.equals(currentRoundIndex())) {
       applicationEventPublisher.publishEvent(new MoveTetrominoCmd(this, gameId, Direction.DOWN));
-      Thread.sleep(1000);
+      Thread.sleep(GAME_SPEED);
     }
   }
 
