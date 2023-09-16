@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public record Board(
     BoardId boardId,
+    //TODO replace by value object slots
     Map<Position, Optional<Tetromino>> slots,
     Optional<Tetromino> fallingTetromino) {
 
@@ -40,7 +41,7 @@ public record Board(
   public Board move(Tetromino tetromino, Direction direction) {
     final Tetromino movedTetromino =
         fallingTetromino()
-            .map(fallingTetromino -> fallingTetromino.move(direction))
+            .map(fallingTetromino -> fallingTetromino.move(direction, slots))
             .orElse(tetromino);
     if (nextTetrominoPositionAvailable(movedTetromino)) {
       return new Board(
