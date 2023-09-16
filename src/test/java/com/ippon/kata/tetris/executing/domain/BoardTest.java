@@ -1,10 +1,10 @@
 package com.ippon.kata.tetris.executing.domain;
 
+import static com.ippon.kata.tetris.executing.domain.BoardFixture.givenNewBoard;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 
 import com.ippon.kata.tetris.executing.application.domain.Board;
-import com.ippon.kata.tetris.executing.application.domain.BoardId;
 import com.ippon.kata.tetris.executing.application.domain.Position;
 import com.ippon.kata.tetris.executing.application.domain.Shape;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
@@ -12,7 +12,6 @@ import com.ippon.kata.tetris.executing.application.domain.Tetromino;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoFixedException;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoId;
 import com.ippon.kata.tetris.shared.domain.Direction;
-import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import java.util.HashMap;
 import java.util.Optional;
@@ -29,16 +28,15 @@ class BoardTest {
         return updatedSlots;
     }
 
-    private static Board givenNewBoard() {
-        return new Board(new BoardId(new GameId(UUID.randomUUID())));
-    }
+
 
     @Test
     void givenEmptyBoard_fallTetromino_shouldBeOnInitPosition() {
         final Board board = givenNewBoard();
         final Shape shape = new Shape(ShapeType.S);
 
-        final Board board1 = board.move(new Tetromino(new TetrominoId(UUID.randomUUID()), shape, TetraminoStatus.IDLE, shape.initPositions()), Direction.DOWN);
+        final Board board1 = board.move(new Tetromino(new TetrominoId(UUID.randomUUID()),
+            shape, TetraminoStatus.IDLE, shape.initPositions()), Direction.DOWN);
 
         then(board1.fallingTetromino()).isNotEmpty();
         then(board1.fallingTetromino().map(Tetromino::positions).orElseThrow()).isEqualTo(shape.initPositions());

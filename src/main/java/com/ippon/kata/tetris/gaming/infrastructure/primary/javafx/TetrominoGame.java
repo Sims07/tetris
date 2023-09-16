@@ -71,6 +71,7 @@ public class TetrominoGame extends Application {
             case DOWN -> tetrominoAPI.move(gameId, Direction.DOWN);
             case LEFT -> tetrominoAPI.move(gameId, Direction.LEFT);
             case RIGHT -> tetrominoAPI.move(gameId, Direction.RIGHT);
+            case SPACE -> tetrominoAPI.move(gameId, Direction.ROTATE);
           }
         });
 

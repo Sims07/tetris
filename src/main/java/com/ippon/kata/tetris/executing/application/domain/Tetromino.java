@@ -34,8 +34,13 @@ public record Tetromino(
     return switch (direction) {
       case DOWN -> moveDown();
       case LEFT -> moveLeft(slots);
+      case ROTATE -> rotate(slots);
       case RIGHT -> moveRight(slots);
     };
+  }
+
+  private Tetromino rotate(Map<Position, Optional<Tetromino>> slots) {
+    return null;
   }
 
   private Tetromino moveRight(Map<Position, Optional<Tetromino>> slots) {
