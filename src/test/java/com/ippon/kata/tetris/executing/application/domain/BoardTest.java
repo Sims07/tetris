@@ -14,21 +14,12 @@ import org.junit.jupiter.api.Test;
 
 class BoardTest {
 
-  private static HashMap<Position, Optional<Tetromino>> slotsWithTetromino(
-      Board board1, Tetromino movedTetromino) {
-    final HashMap<Position, Optional<Tetromino>> updatedSlots = new HashMap<>(board1.slots());
-    movedTetromino
-        .positions()
-        .forEach(position -> updatedSlots.put(position, Optional.of(movedTetromino)));
-    return updatedSlots;
-  }
-
   @Test
-  void givenEmptyBoard_fallTetromino_shouldBeOnInitPosition() {
+  void givenEmptyBoard_moveDown_shouldBeOnInitPosition() {
     final Board board = BoardFixture.givenNewBoard();
     final Shape shape = new Shape(ShapeType.S);
 
-    final Board board1 =
+    final Board boardWithFallingTetromino =
         board.move(
             new Tetromino(
                 new TetrominoId(UUID.randomUUID()),
@@ -38,22 +29,21 @@ class BoardTest {
                 new RotationIndex(0)),
             Direction.DOWN);
 
-    then(board1.fallingTetromino()).isNotEmpty();
-    then(board1.fallingTetromino().map(Tetromino::positions).orElseThrow())
+    then(boardWithFallingTetromino.fallingTetromino()).isNotEmpty();
+    then(boardWithFallingTetromino.fallingTetromino().map(Tetromino::positions).orElseThrow())
         .isEqualTo(shape.initPositions());
-    board1
+    boardWithFallingTetromino
         .fallingTetromino()
         .map(Tetromino::positions)
         .orElseThrow()
         .forEach(
             position -> {
-              then(board1.slots().get(position).orElseThrow()).isNotNull();
+              then(boardWithFallingTetromino.slots().get(position).orElseThrow()).isNotNull();
             });
   }
 
   @Test
-  void
-      givenEmptyBoardTetrominoPositionNextInitial_fallTetromino_shouldSetTetrominoStatusToMoving() {
+  void givenEmptyBoardTetrominoPositionNextInitial_moveDown_shouldSetTetrominoStatusToMoving() {
     final Shape shape = new Shape(ShapeType.S);
     final Tetromino tetromino =
         new Tetromino(
@@ -62,11 +52,9 @@ class BoardTest {
             TetraminoStatus.MOVING,
             shape.initPositions(),
             new RotationIndex(0));
-    final Board board1 = BoardFixture.givenNewBoard();
-    final Board board =
-        new Board(board1.boardId(), slotsWithTetromino(board1, tetromino), Optional.of(tetromino));
+    final Board boardWithTetromino = givenBoardWithTetromino(tetromino);
 
-    final Board boardUpdated = board.move(tetromino, Direction.DOWN);
+    final Board boardUpdated = boardWithTetromino.move(tetromino, Direction.DOWN);
 
     then(boardUpdated.fallingTetromino().map(Tetromino::status).orElseThrow())
         .isEqualTo(TetraminoStatus.MOVING);
@@ -86,10 +74,9 @@ class BoardTest {
                 .map(p -> new Position(p.x(), p.y() + Board.NB_LINES))
                 .toList(),
             new RotationIndex(0));
-    final Board board1 = BoardFixture.givenNewBoard();
-    final Board board =
-        new Board(board1.boardId(), slotsWithTetromino(board1, tetromino), Optional.of(tetromino));
-    thenThrownBy(() -> board.move(tetromino, Direction.DOWN))
+    final Board boardWithTetromino = givenBoardWithTetromino(tetromino);
+
+    thenThrownBy(() -> boardWithTetromino.move(tetromino, Direction.DOWN))
         .isInstanceOf(TetrominoFixedException.class);
   }
 
@@ -192,7 +179,7 @@ class BoardTest {
   }
 
   @Test
-  void givenEmptyBoard_projectedPosition_shouldReturnEmpty(){
+  void givenEmptyBoard_projectedPosition_shouldReturnEmpty() {
     final Board board = BoardFixture.givenNewBoard();
 
     final Optional<Tetromino> tetromino = board.projectedTetromino();
@@ -212,5 +199,22 @@ class BoardTest {
       }
     }
     return boardWithFallingTetromino;
+  }
+
+  private static Board givenBoardWithTetromino(Tetromino tetromino) {
+    final Board initialBoard = BoardFixture.givenNewBoard();
+    return new Board(
+        initialBoard.boardId(),
+        slotsWithTetromino(initialBoard, tetromino),
+        Optional.of(tetromino));
+  }
+
+  private static HashMap<Position, Optional<Tetromino>> slotsWithTetromino(
+      Board board1, Tetromino movedTetromino) {
+    final HashMap<Position, Optional<Tetromino>> updatedSlots = new HashMap<>(board1.slots());
+    movedTetromino
+        .positions()
+        .forEach(position -> updatedSlots.put(position, Optional.of(movedTetromino)));
+    return updatedSlots;
   }
 }
