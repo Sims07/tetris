@@ -11,9 +11,9 @@ public class UpdateScore implements UpdateScoreUseCase {
   }
 
   @Override
-  public ScoreUpdatedEvent erasedLines(GameId gameId, int nbLinesErased) {
+  public ScoreUpdatedEvent erasedLines(GameId gameId, int nbErasedLines) {
     final Score score = scores.get(gameId);
-    Score updatedScore = score.erasedLines(nbLinesErased);
+    Score updatedScore = score.erasedLines(nbErasedLines);
     final Score newScore = scores.save(updatedScore);
     return new ScoreUpdatedEvent(newScore);
   }

@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.scoring.infrastructure.primary.spring;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.then;
 
 import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.UpdateScoreUseCase;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,16 +20,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class PreparingGameStartedListenerTest {
   @InjectMocks PreparingGameStartedListener preparingGameStartedListener;
   @Mock UpdateScoreUseCase updateScoreUseCase;
-  @Mock
-  EventPublisher<ScoreUpdatedEvent> eventPublisher;
+  @Mock EventPublisher<ScoreUpdatedEvent> eventPublisher;
 
   @Test
   void givenErasedLineReceived_onErasedLines_shouldUpdateTheScore() {
     final UUID gameId = UUID.randomUUID();
-    
-    preparingGameStartedListener.onApplicationEvent(new LinesErasedEventDTO(this, List.of(21), gameId));
 
-    BDDMockito.then(updateScoreUseCase).should().erasedLines(new GameId(gameId), 1);
-    BDDMockito.then(eventPublisher).should().publish(any());
+    preparingGameStartedListener.onApplicationEvent(
+        new LinesErasedEventDTO(this, List.of(21), gameId, 1));
+
+    then(updateScoreUseCase).should().erasedLines(new GameId(gameId), 1);
+    then(eventPublisher).should().publish(any());
   }
 }

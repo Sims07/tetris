@@ -9,17 +9,21 @@ import org.springframework.context.ApplicationEvent;
 public class LinesErasedEventDTO extends ApplicationEvent {
   private final List<Integer> erasedLines;
   private final UUID gameId;
+  private final int level;
 
-  public LinesErasedEventDTO(Object source, List<Integer> erasedLines, UUID gameId) {
+  public LinesErasedEventDTO(Object source, List<Integer> erasedLines, UUID gameId, int level) {
     super(source);
     this.erasedLines = erasedLines;
     this.gameId = gameId;
+    this.level = level;
   }
 
   public static LinesErasedEventDTO from(Object source, LinesErasedEvent domainEvent) {
-    return new LinesErasedEventDTO(source,
+    return new LinesErasedEventDTO(
+        source,
         domainEvent.erasedLines().stream().map(LineIndex::value).toList(),
-        domainEvent.gameId().value());
+        domainEvent.gameId().value(),
+        domainEvent.level().value());
   }
 
   public List<Integer> erasedLines() {
@@ -28,5 +32,9 @@ public class LinesErasedEventDTO extends ApplicationEvent {
 
   public UUID gameId() {
     return gameId;
+  }
+
+  public int level() {
+    return level;
   }
 }

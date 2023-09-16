@@ -16,6 +16,7 @@ import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoFixture;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ class EraseLineUseCaseTest {
     given(boards.save(any())).willAnswer(i -> i.getArguments()[0]);
     given(boards.get(boardId)).willReturn(board);
 
-    final LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(boardId);
+    final LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(boardId, new Level(1));
 
     then(linesErasedEvent).isNotNull();
     then(linesErasedEvent.erasedLines().size()).isEqualTo(2);

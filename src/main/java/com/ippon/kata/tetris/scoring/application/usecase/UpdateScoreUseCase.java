@@ -5,5 +5,5 @@ import com.ippon.kata.tetris.shared.domain.GameId;
 
 public interface UpdateScoreUseCase {
 
-    ScoreUpdatedEvent erasedLines(GameId gameId, int i);
+    ScoreUpdatedEvent erasedLines(GameId gameId, int nbErasedLines);
 }

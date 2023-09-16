@@ -65,7 +65,7 @@ public class ExecutingGameStartedListener {
   public void onApplicationEvent(NextRoundStartedEventDTO event) throws InterruptedException {
     LOGGER.info("EXECUTING : Receive next round started {}", event.gameId());
     final GameId gameId = new GameId(event.gameId());
-    eraseCompletedLines(gameId);
+    eraseCompletedLines(gameId, event.level());
     RoundIndex roundIndex =
         roundIndexes.add(new RoundIndex(event.roundIndex(), new GameId(event.gameId())));
 
@@ -84,10 +84,10 @@ public class ExecutingGameStartedListener {
     return roundIndex.equals(currentRoundIndex(new GameId(event.gameId())));
   }
 
-  private void eraseCompletedLines(GameId gameId) {
-    LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
+  private void eraseCompletedLines(GameId gameId, int level) {
+    LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId), new Level(level));
     while (!linesErasedEvent.erasedLines().isEmpty()) {
-      linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
+      linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId), new Level(level));
     }
   }
 
