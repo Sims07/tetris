@@ -5,67 +5,65 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
-public record Tetromino(TetrominoId id,
-                        Shape shape,
-                        TetraminoStatus status,
-                        List<Position> positions) {
+public record Tetromino(
+    TetrominoId id, Shape shape, TetraminoStatus status, List<Position> positions) {
 
-    public static final int MOVE_OFFSET = 1;
-    public Tetromino(Shape shape) {
-        this(new TetrominoId(UUID.randomUUID()), shape, TetraminoStatus.MOVING, null);
-    }
-    private static Position down(Position initPosition) {
-        return new Position(initPosition.x() + MOVE_OFFSET, initPosition.y());
-    }
+  public static final int MOVE_OFFSET = 1;
+  public static final int LOW_LIMIT = 0;
 
-    private static Position left(Position initPosition) {
-        return new Position(initPosition.x(), initPosition.y() - MOVE_OFFSET);
-    }
+  public Tetromino(Shape shape) {
+    this(new TetrominoId(UUID.randomUUID()), shape, TetraminoStatus.MOVING, null);
+  }
 
-    private static Position right(Position initPosition) {
-        return new Position(initPosition.x(), initPosition.y() + MOVE_OFFSET);
-    }
+  private static Position down(Position initPosition) {
+    return new Position(initPosition.x() + MOVE_OFFSET, initPosition.y());
+  }
 
-    public Tetromino move(Direction direction) {
-        return switch (direction) {
-            case DOWN -> moveDown();
-            case LEFT -> moveLeft();
-            case RIGHT -> moveRight();
-        };
-    }
+  private static Position left(Position initPosition) {
+    return new Position(initPosition.x(), initPosition.y() - MOVE_OFFSET);
+  }
 
-    private Tetromino moveRight() {
-        return moveTo(Tetromino::right);
-    }
+  private static Position right(Position initPosition) {
+    return new Position(initPosition.x(), initPosition.y() + MOVE_OFFSET);
+  }
 
-    private Tetromino moveTo(MoveTo moveDirection) {
-        return new Tetromino(
-            id,
-            shape,
-            TetraminoStatus.MOVING,
-            positions.stream()
-                .map(moveDirection)
-                .toList()
-        );
-    }
+  public Tetromino move(Direction direction) {
+    return switch (direction) {
+      case DOWN -> moveDown();
+      case LEFT -> moveLeft();
+      case RIGHT -> moveRight();
+    };
+  }
 
-    private Tetromino moveLeft() {
-        return moveTo(Tetromino::left);
+  private Tetromino moveRight() {
+    if (positions.stream().anyMatch(position -> position.y() + MOVE_OFFSET >= Board.NB_COLUMNS)) {
+      return this;
+    } else {
+      return moveTo(Tetromino::right);
     }
+  }
 
-    public Tetromino moveDown() {
-        return moveTo(Tetromino::down);
+  private Tetromino moveTo(MoveTo moveDirection) {
+    return new Tetromino(
+        id, shape, TetraminoStatus.MOVING, positions.stream().map(moveDirection).toList());
+  }
+
+  private Tetromino moveLeft() {
+    if (positions.stream().anyMatch(position -> position.y() - MOVE_OFFSET < LOW_LIMIT)) {
+      return this;
+    } else {
+      return moveTo(Tetromino::left);
     }
+  }
 
-    public Tetromino fixe() {
-        return new Tetromino(
-            new TetrominoId(UUID.randomUUID()), shape,
-            TetraminoStatus.FIXED,
-            positions
-        );
-    }
+  public Tetromino moveDown() {
+    return moveTo(Tetromino::down);
+  }
 
-    interface MoveTo extends Function<Position, Position> {
+  public Tetromino fixe() {
+    return new Tetromino(
+        new TetrominoId(UUID.randomUUID()), shape, TetraminoStatus.FIXED, positions);
+  }
 
-    }
+  interface MoveTo extends Function<Position, Position> {}
 }

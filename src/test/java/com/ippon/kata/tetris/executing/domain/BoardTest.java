@@ -85,4 +85,17 @@ class BoardTest {
             board.move(tetromino, Direction.DOWN)).isInstanceOf(TetrominoFixedException.class);
 
     }
+
+    @Test
+    void givenTetrominoOnBorderLeft_moveLeft_shouldDoNothing() {
+        final Shape shape = new Shape(ShapeType.I);
+        final Tetromino tetromino = new Tetromino(new TetrominoId(UUID.randomUUID()), shape,
+            TetraminoStatus.MOVING,
+            shape.initPositions().stream().map(p -> new Position(p.x(), 0)).toList());
+        final Board board = givenNewBoard();
+
+        final Board moved = board.move(tetromino, Direction.LEFT);
+        moved.move(moved.fallingTetromino().orElseThrow(), Direction.LEFT);
+
+    }
 }
