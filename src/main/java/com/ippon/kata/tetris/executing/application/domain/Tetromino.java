@@ -19,15 +19,15 @@ public record Tetromino(
   }
 
   private static Position down(Position initPosition) {
-    return new Position(initPosition.x() + MOVE_OFFSET, initPosition.y());
+    return new Position(initPosition.x(), initPosition.y() + MOVE_OFFSET);
   }
 
   private static Position left(Position initPosition) {
-    return new Position(initPosition.x(), initPosition.y() - MOVE_OFFSET);
+    return new Position(initPosition.x() - MOVE_OFFSET, initPosition.y());
   }
 
   private static Position right(Position initPosition) {
-    return new Position(initPosition.x(), initPosition.y() + MOVE_OFFSET);
+    return new Position(initPosition.x() + MOVE_OFFSET, initPosition.y());
   }
 
   public Tetromino move(Direction direction, Map<Position, Optional<Tetromino>> slots) {
@@ -60,7 +60,7 @@ public record Tetromino(
   }
 
   private boolean borderLeftTouched() {
-    return positions.stream().anyMatch(position -> position.y() - MOVE_OFFSET < LOW_LIMIT);
+    return positions.stream().anyMatch(position -> position.x() - MOVE_OFFSET < LOW_LIMIT);
   }
 
   private boolean cannotMoveLeft(Map<Position, Optional<Tetromino>> slots) {
@@ -68,7 +68,7 @@ public record Tetromino(
   }
 
   private boolean tetrominoLeftTouched(Map<Position, Optional<Tetromino>> slots) {
-    return tetrominoTouched(slots, position -> position.y() - MOVE_OFFSET);
+    return tetrominoTouched(slots, position -> position.x() - MOVE_OFFSET);
   }
 
 
@@ -77,14 +77,14 @@ public record Tetromino(
   }
 
   private boolean tetrominoRightTouched(Map<Position, Optional<Tetromino>> slots) {
-    return tetrominoTouched(slots, position -> position.y() + MOVE_OFFSET);
+    return tetrominoTouched(slots, position -> position.x() + MOVE_OFFSET);
   }
 
   private boolean tetrominoTouched(Map<Position, Optional<Tetromino>> slots, ToIntFunction<Position> toIntFunction) {
     return positions.stream()
         .anyMatch(
             position -> {
-              final Position nextPosition = new Position(position.x(), toIntFunction.applyAsInt(position));
+              final Position nextPosition = new Position(toIntFunction.applyAsInt(position), position.y());
               final Optional<Tetromino> tetrominoNextPosition = slots.get(nextPosition);
               return tetrominoNextPosition != null
                   && tetrominoNextPosition.isPresent()
@@ -97,7 +97,7 @@ public record Tetromino(
   }
 
   private boolean borderRightTouched() {
-    return positions.stream().anyMatch(position -> position.y() + MOVE_OFFSET >= Board.NB_COLUMNS);
+    return positions.stream().anyMatch(position -> position.x() + MOVE_OFFSET >= Board.NB_COLUMNS);
   }
 
   private Tetromino moveTo(MoveTo moveDirection) {

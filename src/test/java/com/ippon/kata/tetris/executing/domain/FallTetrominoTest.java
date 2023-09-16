@@ -84,7 +84,7 @@ class FallTetrominoTest {
                 shape.initPositions()
                     .stream()
                     .map(position ->
-                        new Position(position.x(), position.y() + Board.NB_LINES - 1))
+                        new Position(position.x() + Board.NB_LINES - 1, position.y()))
                     .toList()
             ))
         );

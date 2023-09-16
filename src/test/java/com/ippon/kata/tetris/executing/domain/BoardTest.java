@@ -72,7 +72,7 @@ class BoardTest {
         final Shape shape = new Shape(ShapeType.S);
         final Tetromino tetromino = new Tetromino(new TetrominoId(UUID.randomUUID()), shape,
             TetraminoStatus.MOVING,
-            shape.initPositions().stream().map(p -> new Position(p.x() + Board.NB_LINES, p.y())).toList());
+            shape.initPositions().stream().map(p -> new Position(p.x(), p.y() + Board.NB_LINES)).toList());
         final Board board1 = givenNewBoard();
         final Board board = new Board(
             board1.boardId(),
@@ -89,7 +89,7 @@ class BoardTest {
         final Shape shape = new Shape(ShapeType.I);
         final Tetromino tetromino = new Tetromino(new TetrominoId(UUID.randomUUID()), shape,
             TetraminoStatus.MOVING,
-            shape.initPositions().stream().map(p -> new Position(p.x(), 0)).toList());
+            shape.initPositions().stream().map(p -> new Position(0, p.y())).toList());
         final Board board = givenNewBoard();
 
         final Board moved = board.move(tetromino, Direction.LEFT);

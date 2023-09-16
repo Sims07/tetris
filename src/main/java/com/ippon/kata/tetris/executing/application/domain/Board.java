@@ -34,7 +34,7 @@ public record Board(
         .forEach(
             i ->
                 IntStream.range(0, NB_COLUMNS)
-                    .forEach(j -> emptyBoard.put(new Position(i, j), Optional.empty())));
+                    .forEach(j -> emptyBoard.put(new Position(j, i), Optional.empty())));
     return emptyBoard;
   }
 
@@ -50,7 +50,7 @@ public record Board(
       throw new TetrominoFixedException(
           tetromino,
           new Board(boardId, slots(), Optional.empty()),
-          tetromino.positions().stream().map(Position::x).anyMatch(x -> x == 0));
+          tetromino.positions().stream().map(Position::y).anyMatch(x -> x == 0));
     }
   }
 
@@ -58,7 +58,7 @@ public record Board(
     return movedTetromino.positions().stream()
         .map(
             position -> {
-              if (position.x() < Board.NB_LINES) {
+              if (position.y() < Board.NB_LINES) {
                 final boolean emptySlot = emptySlot(position);
                 final boolean tetrominoAlreadyAtThisSlot =
                     tetrominoAlreadyAtThisSlot(movedTetromino, position);
@@ -86,7 +86,7 @@ public record Board(
   }
 
   private boolean inRange(Position position) {
-    return position.x() < NB_LINES && position.y() < NB_COLUMNS;
+    return position.y() < NB_LINES && position.x() < NB_COLUMNS;
   }
 
   private Map<Position, Optional<Tetromino>> moveTetrominoFromTo(

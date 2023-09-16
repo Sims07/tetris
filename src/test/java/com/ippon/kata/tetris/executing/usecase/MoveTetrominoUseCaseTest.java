@@ -83,24 +83,24 @@ class MoveTetrominoUseCaseTest {
         switch (direction) {
             case DOWN -> then(tetromino.positions())
                 .isEqualTo(
-                    List.of(new Position(1, 5)
-                        , new Position(2, 5)
-                        , new Position(3, 5)
-                        , new Position(4, 5))
+                    List.of(new Position(5, 1)
+                        , new Position(5, 2)
+                        , new Position(5, 3)
+                        , new Position(5, 4))
                 );
             case LEFT -> then(tetromino.positions())
                 .isEqualTo(
-                    List.of(new Position(0, 4)
-                        , new Position(1, 4)
-                        , new Position(2, 4)
-                        , new Position(3, 4))
+                    List.of(new Position(4, 0)
+                        , new Position(4, 1)
+                        , new Position(4, 2)
+                        , new Position(4, 3))
                 );
             case RIGHT -> then(tetromino.positions())
                 .isEqualTo(
-                    List.of(new Position(0, 6)
-                        , new Position(1, 6)
-                        , new Position(2, 6)
-                        , new Position(3, 6))
+                    List.of(new Position(6, 0)
+                        , new Position(6, 1)
+                        , new Position(6, 2)
+                        , new Position(6, 3))
                 );
         }
     }
