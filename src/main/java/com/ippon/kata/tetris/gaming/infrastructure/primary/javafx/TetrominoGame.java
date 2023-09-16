@@ -118,12 +118,12 @@ public class TetrominoGame extends Application {
     graphicsContext.setFill(
         switch (shape) {
           case I -> Color.YELLOW;
-          case J -> Color.RED;
-          case L -> Color.BLUE;
-          case O -> Color.ORANGE;
-          case S -> Color.GREEN;
+          case J -> Color.AQUA;
+          case L -> Color.AZURE;
+          case O -> Color.SALMON;
+          case S -> Color.LIGHTGREEN;
           case T -> Color.PINK;
-          case Z -> Color.PURPLE;
+          case Z -> Color.BLUEVIOLET;
         });
   }
 
