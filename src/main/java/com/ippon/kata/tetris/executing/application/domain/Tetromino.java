@@ -52,21 +52,21 @@ public record Tetromino(
 
   private Tetromino rotate(Map<Position, Optional<Tetromino>> slots) {
     final List<Position> roratedPositions = roratedPositions();
-    if(cannotRotate(roratedPositions, slots)){
+    if (cannotRotate(roratedPositions, slots)) {
       return this;
-    }else{
+    } else {
       return new Tetromino(id, shape, status, roratedPositions, rotationIndex.next());
     }
   }
 
-  private boolean cannotRotate(List<Position> roratedPositions, Map<Position, Optional<Tetromino>> slots) {
-    return outOfRange(roratedPositions) || tetrominoTouched( slots, Position::x, roratedPositions);
+  private boolean cannotRotate(
+      List<Position> roratedPositions, Map<Position, Optional<Tetromino>> slots) {
+    return outOfRange(roratedPositions) || tetrominoTouched(slots, Position::x, roratedPositions);
   }
 
   private static boolean outOfRange(List<Position> roratedPositions) {
     return roratedPositions.stream().anyMatch(position -> position.x() < 0 || position.y() < 0);
   }
-
 
   private List<Position> roratedPositions() {
     List<Position> rotatedPositions = new ArrayList<>();
@@ -115,7 +115,9 @@ public record Tetromino(
   }
 
   private boolean tetrominoTouched(
-      Map<Position, Optional<Tetromino>> slots, ToIntFunction<Position> toIntFunction, List<Position> positionToCheck) {
+      Map<Position, Optional<Tetromino>> slots,
+      ToIntFunction<Position> toIntFunction,
+      List<Position> positionToCheck) {
     return positionToCheck.stream()
         .anyMatch(
             position -> {

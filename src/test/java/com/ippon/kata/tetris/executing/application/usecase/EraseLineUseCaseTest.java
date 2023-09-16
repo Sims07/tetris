@@ -14,7 +14,7 @@ import com.ippon.kata.tetris.executing.application.domain.LinesErasedEvent;
 import com.ippon.kata.tetris.executing.application.domain.Position;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
-import com.ippon.kata.tetris.executing.domain.TetrominoFixture;
+import com.ippon.kata.tetris.executing.application.domain.TetrominoFixture;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;

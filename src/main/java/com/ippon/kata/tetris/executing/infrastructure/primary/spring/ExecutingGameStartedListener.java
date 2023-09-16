@@ -10,6 +10,7 @@ import com.ippon.kata.tetris.executing.application.usecase.EraseLineUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.FallTetrominoUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.InitializeBoardUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.PickTetrominoUseCase;
+import com.ippon.kata.tetris.executing.infrastructure.secondary.spring.MoveTetrominoCmd;
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedEventDTO;
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundStartedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;

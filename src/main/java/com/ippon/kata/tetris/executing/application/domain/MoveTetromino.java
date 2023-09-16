@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.executing.application.domain;
 
 import com.ippon.kata.tetris.executing.application.usecase.MoveTetrominoUseCase;
-import com.ippon.kata.tetris.executing.infrastructure.secondary.TetrominoMovedPublisher;
+import com.ippon.kata.tetris.executing.infrastructure.secondary.spring.TetrominoMovedPublisher;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.Optional;

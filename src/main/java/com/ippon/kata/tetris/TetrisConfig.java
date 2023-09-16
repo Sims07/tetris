@@ -15,7 +15,7 @@ import com.ippon.kata.tetris.executing.application.usecase.FallTetrominoUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.InitializeBoardUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.MoveTetrominoUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.PickTetrominoUseCase;
-import com.ippon.kata.tetris.executing.infrastructure.secondary.TetrominoMovedPublisher;
+import com.ippon.kata.tetris.executing.infrastructure.secondary.spring.TetrominoMovedPublisher;
 import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
 import com.ippon.kata.tetris.gaming.application.domain.NextRoundStartedEvent;
