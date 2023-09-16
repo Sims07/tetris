@@ -19,8 +19,6 @@ public class GenerateNextTetromino implements GenerateNextTetrominoUseCase {
     @Override
     public TetrominoGeneratedEvent generateNextTetromino(GameId gameId) {
         LOGGER.info("PREPARING : Command Generate tetromino");
-        final TetrominoGeneratedEvent tetrominoGeneratedEvent = new TetrominoGenerator().generate(gameId);
-        eventPublisher.publish(tetrominoGeneratedEvent);
-        return tetrominoGeneratedEvent;
+        return eventPublisher.publish(new TetrominoGenerator().generate(gameId));
     }
 }

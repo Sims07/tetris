@@ -50,11 +50,24 @@ public record Tetromino(
   }
 
   private Tetromino rotate(Map<Position, Optional<Tetromino>> slots) {
-    return new Tetromino(id, shape, status, rotatePositions(), rotationIndex.next());
+    final List<Position> roratedPositions = roratedPositions();
+    if(cannotRotate(roratedPositions, slots)){
+      return this;
+    }else{
+      return new Tetromino(id, shape, status, roratedPositions, rotationIndex.next());
+    }
   }
 
-  private List<Position> rotatePositions() {
-    //TODO test cannot rotate
+  private boolean cannotRotate(List<Position> roratedPositions, Map<Position, Optional<Tetromino>> slots) {
+    return outOfRange(roratedPositions) || tetrominoTouched( slots, Position::x, roratedPositions);
+  }
+
+  private static boolean outOfRange(List<Position> roratedPositions) {
+    return roratedPositions.stream().anyMatch(position -> position.x() < 0 || position.y() < 0);
+  }
+
+
+  private List<Position> roratedPositions() {
     List<Position> rotatedPositions = new ArrayList<>();
     final List<Position> positions1 = shape().translatedRotationPositions(rotationIndex);
     for (int i = 0; i < positions().size(); i++) {
@@ -63,7 +76,6 @@ public record Tetromino(
     }
     return rotatedPositions;
   }
-
 
   private Tetromino moveRight(Map<Position, Optional<Tetromino>> slots) {
     if (cannotMoveRight(slots)) {
@@ -90,7 +102,7 @@ public record Tetromino(
   }
 
   private boolean tetrominoLeftTouched(Map<Position, Optional<Tetromino>> slots) {
-    return tetrominoTouched(slots, position -> position.x() - MOVE_OFFSET);
+    return tetrominoTouched(slots, position -> position.x() - MOVE_OFFSET, positions);
   }
 
   private boolean cannotMoveRight(Map<Position, Optional<Tetromino>> slots) {
@@ -98,12 +110,12 @@ public record Tetromino(
   }
 
   private boolean tetrominoRightTouched(Map<Position, Optional<Tetromino>> slots) {
-    return tetrominoTouched(slots, position -> position.x() + MOVE_OFFSET);
+    return tetrominoTouched(slots, position -> position.x() + MOVE_OFFSET, positions);
   }
 
   private boolean tetrominoTouched(
-      Map<Position, Optional<Tetromino>> slots, ToIntFunction<Position> toIntFunction) {
-    return positions.stream()
+      Map<Position, Optional<Tetromino>> slots, ToIntFunction<Position> toIntFunction, List<Position> positionToCheck) {
+    return positionToCheck.stream()
         .anyMatch(
             position -> {
               final Position nextPosition =
@@ -138,11 +150,7 @@ public record Tetromino(
 
   public Tetromino fixe() {
     return new Tetromino(
-        new TetrominoId(UUID.randomUUID()),
-        shape,
-        TetraminoStatus.FIXED,
-        positions,
-        rotationIndex);
+        new TetrominoId(UUID.randomUUID()), shape, TetraminoStatus.FIXED, positions, rotationIndex);
   }
 
   interface MoveTo extends Function<Position, Position> {}

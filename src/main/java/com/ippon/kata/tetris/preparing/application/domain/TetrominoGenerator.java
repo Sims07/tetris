@@ -6,27 +6,21 @@ import java.util.Optional;
 import java.util.Random;
 
 public record TetrominoGenerator() {
-    static Random random = new Random();
-    public Optional<Tetromino> current() {
-        return Optional.empty();
-    }
+  static Random random = new Random();
 
-    public TetrominoGeneratedEvent generate(GameId gameId) {
-        return new TetrominoGeneratedEvent(
-            new Tetromino(
-                randomShape()
-            ),
-            gameId
-        );
-    }
+  public Optional<Tetromino> current() {
+    return Optional.empty();
+  }
 
-    private ShapeType randomShape() {
-        return ShapeType.values()[randomInt()];
-    }
-    public int randomInt() {
-        return random.ints(0, ShapeType.values().length)
-            .findFirst()
-            .orElse(0);
-    }
+  public TetrominoGeneratedEvent generate(GameId gameId) {
+    return new TetrominoGeneratedEvent(new Tetromino(randomShape()), gameId);
+  }
 
+  private ShapeType randomShape() {
+    return ShapeType.values()[randomInt()];
+  }
+
+  public int randomInt() {
+    return random.ints(0, ShapeType.values().length).findFirst().orElse(0);
+  }
 }
