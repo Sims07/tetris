@@ -7,7 +7,7 @@ public abstract class AbstractPublisher<DTO, D> implements EventPublisher<D> {
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  public AbstractPublisher(ApplicationEventPublisher applicationEventPublisher) {
+  protected AbstractPublisher(ApplicationEventPublisher applicationEventPublisher) {
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
