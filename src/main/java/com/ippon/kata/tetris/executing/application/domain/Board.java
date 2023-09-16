@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public record Board(
     BoardId boardId,
-    // TODO replace by value object slots
     Map<Position, Optional<Tetromino>> slots,
     Optional<Tetromino> fallingTetromino) {
 
@@ -149,9 +149,7 @@ public record Board(
 
   public List<LineIndex> lineToErase() {
     return slots.entrySet().stream()
-        .collect(
-            groupingBy(
-                e -> e.getKey().y(), summingInt((pos1) -> pos1.getValue().isPresent() ? 1 : 0)))
+        .collect(groupingBy(Board::groupingByLine, reduceByTetrominoPresent()))
         .entrySet()
         .stream()
         .filter(entry -> entry.getValue() == NB_COLUMNS)
@@ -159,5 +157,38 @@ public record Board(
         .map(LineIndex::new)
         .sorted(Comparator.comparingInt(LineIndex::value).reversed())
         .toList();
+  }
+
+  private static Collector<Entry<Position, Optional<Tetromino>>, ?, Integer>
+      reduceByTetrominoPresent() {
+    return summingInt(pos -> pos.getValue().isPresent() ? 1 : 0);
+  }
+
+  public Optional<Tetromino> projectedTetromino() {
+    if (fallingTetromino().isEmpty()) {
+      return Optional.empty();
+    }
+    return emulateFalling();
+  }
+
+  private Optional<Tetromino> emulateFalling() {
+    boolean fixed = false;
+    Board boardWithFallingTetromino = this;
+    Tetromino fixedTetromino = null;
+    while (!fixed) {
+      try {
+        boardWithFallingTetromino =
+            boardWithFallingTetromino.move(
+                boardWithFallingTetromino.fallingTetromino().orElseThrow(), Direction.DOWN);
+      } catch (TetrominoFixedException tfe) {
+        fixed = true;
+        fixedTetromino = tfe.tetromino();
+      }
+    }
+    return Optional.of(fixedTetromino);
+  }
+
+  private static int groupingByLine(Entry<Position, Optional<Tetromino>> e) {
+    return e.getKey().y();
   }
 }

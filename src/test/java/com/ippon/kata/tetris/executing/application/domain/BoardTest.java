@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 
 class BoardTest {
 
-  public static final int SPEED_MS = 100;
-
   private static HashMap<Position, Optional<Tetromino>> slotsWithTetromino(
       Board board1, Tetromino movedTetromino) {
     final HashMap<Position, Optional<Tetromino>> updatedSlots = new HashMap<>(board1.slots());
@@ -140,5 +138,79 @@ class BoardTest {
             .map(position -> newBoard.slots().get(position))
             .allMatch(Optional::isPresent);
     then(samePosition).isTrue();
+  }
+
+  @Test
+  void
+      givenEmptyBoardWithFallingITetromino_projectedPosition_shouldListTetrominoPositionTranslatedToTheBottom() {
+    final Shape shape = new Shape(ShapeType.I);
+    final Tetromino tetromino =
+        new Tetromino(
+            new TetrominoId(UUID.randomUUID()),
+            shape,
+            TetraminoStatus.MOVING,
+            shape.initPositions().stream().map(p -> new Position(9, p.y())).toList(),
+            new RotationIndex(0));
+    final Board board = BoardFixture.givenNewBoard();
+    final Board boardWithFallingTetromino =
+        board.move(tetromino, Direction.DOWN).move(tetromino, Direction.DOWN);
+
+    List<Position> projectedTetrominoPositions =
+        boardWithFallingTetromino.projectedTetromino().map(Tetromino::positions).orElseThrow();
+
+    then(projectedTetrominoPositions).isNotNull();
+    then(projectedTetrominoPositions).isNotEmpty();
+    projectedTetrominoPositions.forEach(
+        projectedTetromino -> {
+          then(projectedTetromino.y()).isEqualTo(Board.NB_LINES - 1);
+        });
+  }
+
+  @Test
+  void
+      givenNonEmptyBoardWithFallingITetromino_projectedPosition_shouldListTetrominoPositionTranslatedToThePreviousTetromino() {
+    final Shape shape = new Shape(ShapeType.I);
+    final Tetromino tetromino =
+        new Tetromino(
+            new TetrominoId(UUID.randomUUID()),
+            shape,
+            TetraminoStatus.MOVING,
+            shape.initPositions().stream().map(p -> new Position(9, p.y())).toList(),
+            new RotationIndex(0));
+    final Board board = BoardFixture.givenNewBoard();
+    final Board boardWithFallingTetromino = fallingTetromino(board, tetromino);
+
+    List<Position> projectedTetrominoPositions =
+        boardWithFallingTetromino.projectedTetromino().map(Tetromino::positions).orElseThrow();
+
+    then(projectedTetrominoPositions).isNotNull();
+    then(projectedTetrominoPositions).isNotEmpty();
+    projectedTetrominoPositions.forEach(
+        projectedTetromino -> {
+          then(projectedTetromino.y()).isEqualTo(Board.NB_LINES - 1);
+        });
+  }
+
+  @Test
+  void givenEmptyBoard_projectedPosition_shouldReturnEmpty(){
+    final Board board = BoardFixture.givenNewBoard();
+
+    final Optional<Tetromino> tetromino = board.projectedTetromino();
+
+    then(tetromino).isEmpty();
+  }
+
+  private static Board fallingTetromino(Board board, Tetromino tetromino) {
+    Board boardWithFallingTetromino =
+        board.move(tetromino, Direction.DOWN).move(tetromino, Direction.DOWN);
+    boolean fixed = false;
+    while (!fixed) {
+      try {
+        boardWithFallingTetromino = boardWithFallingTetromino.move(tetromino, Direction.DOWN);
+      } catch (TetrominoFixedException tfe) {
+        fixed = true;
+      }
+    }
+    return boardWithFallingTetromino;
   }
 }
