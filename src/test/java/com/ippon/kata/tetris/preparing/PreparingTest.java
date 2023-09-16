@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class PreparingTest {
+class PreparingTest {
 
     private static GameId getGameId() {
         return new GameId(UUID.randomUUID());

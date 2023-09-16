@@ -2,8 +2,10 @@ package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
 
 import com.ippon.kata.tetris.TetrisApplication;
 import com.ippon.kata.tetris.executing.infrastructure.primary.spring.BoardAPI;
+import com.ippon.kata.tetris.executing.infrastructure.primary.spring.TetrominoAPI;
 import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
+import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.model.BoardDTO;
@@ -28,6 +30,7 @@ public class TetrominoGame extends Application {
   public static final String TITLE = "Tetromino";
   private ConfigurableApplicationContext applicationContext;
   private BoardAPI boardAPI;
+  private TetrominoAPI tetrominoAPI;
   private GameId gameId;
   private TetrisGameStartUseCase tetrisGameStartUseCase;
 
@@ -36,6 +39,7 @@ public class TetrominoGame extends Application {
     applicationContext = new SpringApplicationBuilder(TetrisApplication.class).run();
     boardAPI = applicationContext.getBean(BoardAPI.class);
     tetrisGameStartUseCase = applicationContext.getBean(TetrisGameStartUseCase.class);
+    tetrominoAPI = applicationContext.getBean(TetrominoAPI.class);
   }
 
   @Override
@@ -55,9 +59,18 @@ public class TetrominoGame extends Application {
               event -> Platform.runLater(() -> renderTetromino(graphicsContext, event)));
   }
 
-  private static GraphicsContext initCanvas(Stage primaryStage) {
+  private GraphicsContext initCanvas(Stage primaryStage) {
     Group root = new Group();
     Scene scene = new Scene(root);
+
+    scene.setOnKeyPressed(event -> {
+      switch (event.getCode()) {
+          case DOWN ->  tetrominoAPI.move(gameId, Direction.DOWN);
+          case LEFT ->  tetrominoAPI.move(gameId, Direction.LEFT);
+          case RIGHT ->  tetrominoAPI.move(gameId, Direction.RIGHT);
+      }
+    });
+
     final Canvas canvas = new Canvas(2 * WIDTH * BLOCK_SIZE, HEIGHT * BLOCK_SIZE);
     GraphicsContext gc = canvas.getGraphicsContext2D();
     primaryStage.setTitle(TITLE);

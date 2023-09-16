@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Random;
 
 public record TetrominoGenerator() {
-
+    static Random random = new Random();
     public Optional<Tetromino> current() {
         return Optional.empty();
     }
@@ -14,18 +14,19 @@ public record TetrominoGenerator() {
     public TetrominoGeneratedEvent generate(GameId gameId) {
         return new TetrominoGeneratedEvent(
             new Tetromino(
-                ShapeType.J
+                randomShape()
             ),
             gameId
         );
     }
 
-    private int randomIndex() {
-        Random random = new Random();
+    private ShapeType randomShape() {
+        return ShapeType.values()[randomInt()];
+    }
+    public int randomInt() {
         return random.ints(0, ShapeType.values().length)
             .findFirst()
             .orElse(0);
     }
-
 
 }

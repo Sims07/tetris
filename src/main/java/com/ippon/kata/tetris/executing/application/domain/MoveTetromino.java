@@ -18,19 +18,30 @@ public class MoveTetromino implements MoveTetrominoUseCase {
     }
 
     @Override
-    public Optional<TetrominoMovedEvent> move(GameId gameId, Direction direction) {
-        final Board board = boards.get(new BoardId(gameId));
-        return board.fallingTetromino()
-            .map(tetromino -> {
-                    Board updatedBoard = board.move(tetromino, direction);
-                    boards.save(updatedBoard);
-                    return eventPublisher.publish(new TetrominoMovedEvent(
-                        gameId,
-                        updatedBoard.fallingTetromino().orElseThrow(),
-                        direction,
-                        false));
+    public synchronized Optional<TetrominoMovedEvent> move(GameId gameId, Direction direction) {
+        try {
+            final Board board = boards.get(new BoardId(gameId));
+            return board.fallingTetromino()
+                .map(tetromino -> {
+                        Board updatedBoard = board.move(tetromino, direction);
+                        boards.save(updatedBoard);
+                        return eventPublisher.publish(new TetrominoMovedEvent(
+                            gameId,
+                            updatedBoard.fallingTetromino().orElseThrow(),
+                            direction,
+                            false));
 
-                }
-            );
+                    }
+                );
+        } catch (TetrominoFixedException tetrominoFixedException) {
+            boards.save(tetrominoFixedException.board());
+            return Optional.of(eventPublisher.publish(new TetrominoMovedEvent(
+                gameId,
+                tetrominoFixedException.tetromino().fixe(),
+                Direction.DOWN,
+                tetrominoFixedException.outOfScope()
+            )));
+        }
+
     }
 }
