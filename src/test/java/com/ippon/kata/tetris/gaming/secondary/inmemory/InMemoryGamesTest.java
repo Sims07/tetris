@@ -20,8 +20,8 @@ public class InMemoryGamesTest {
         Games games = new InMemoryGames();
 
         final GameId gameId = new GameId(UUID.randomUUID());
-        final Game toAdd = new Game(gameId, false, false, new Round(IDLE, 0), false, null, new Settings(new Level(1)));
-        final Game added = games.save(toAdd);
+        final Game toAdd = new Game(gameId, false, false, new Round(IDLE, 0), false, null, new Settings(new Level(1)), false);
+        final Game added = games.add(toAdd);
         final Game game = games.get(gameId);
 
         then(added).isNotNull();

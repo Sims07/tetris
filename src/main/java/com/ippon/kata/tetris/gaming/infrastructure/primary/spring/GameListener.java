@@ -1,9 +1,7 @@
 package com.ippon.kata.tetris.gaming.infrastructure.primary.spring;
 
 import com.ippon.kata.tetris.gaming.application.domain.Game;
-import com.ippon.kata.tetris.gaming.application.domain.GameStatus;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
-import com.ippon.kata.tetris.gaming.application.domain.RoundStatus;
 import com.ippon.kata.tetris.gaming.application.usecase.StartNextRoundUseCase;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
@@ -34,7 +32,7 @@ public class GameListener {
   public void onApplicationEvent(BoardInitializedEventDTO event) {
     final Game game = games.get(new GameId(event.getGameId()));
     final Game gameSaved =
-        games.save(
+        games.add(
             new Game(
                 game.id(),
                 true,
@@ -42,7 +40,7 @@ public class GameListener {
                 game.currentRound(),
                 game.scoreInitialized(),
                 game.waitingTetromino(),
-                game.settings()));
+                game.settings(), false));
     LOGGER.info("GAMING : receive board initialized {}", gameSaved);
     startNextRound(gameSaved);
   }
@@ -51,7 +49,7 @@ public class GameListener {
   @EventListener
   public void onApplicationEvent(TetrominoGeneratedEventDTO event) {
     final Game game = games.get(new GameId(event.getGameId()));
-    final Game saved = games.save(game.tetrominoGenerated(ShapeType.valueOf(event.getShape())));
+    final Game saved = games.add(game.tetrominoGenerated(ShapeType.valueOf(event.getShape())));
     LOGGER.info("GAMING : receive tetromino generated  {}", saved);
     startNextRound(saved);
   }
@@ -60,7 +58,7 @@ public class GameListener {
   @EventListener
   public void onApplicationEvent(ScoreUpdatedEventDTO event) {
     final Game game = games.get(new GameId(event.getGameId()));
-    final Game saved = games.save(game.initializeScore());
+    final Game saved = games.add(game.initializeScore());
     LOGGER.info("GAMING : receive score initialized {}", saved);
     startNextRound(saved);
   }
@@ -74,19 +72,13 @@ public class GameListener {
     } else if (event.tetrominoFixed()) {
       final Game game = games.get(new GameId(event.gameId()));
       final Game updatedGame = game.finishRound();
-      startNextRound(games.save(updatedGame));
+      startNextRound(games.add(updatedGame));
     }
   }
 
   private void startNextRound(Game gameSaved) {
-    if (nextRoundAvailable(gameSaved)) {
+    if (gameSaved.nextRoundAvailable()) {
       nextRoundUseCase.start(gameSaved.id(), gameSaved.waitingTetromino().shape());
     }
-  }
-
-  private static boolean nextRoundAvailable(Game gameSaved) {
-    return gameSaved.status() == GameStatus.PLAYING
-        && gameSaved.currentRound().status() != RoundStatus.STARTED
-        && gameSaved.waitingTetromino() != null;
   }
 }

@@ -24,8 +24,9 @@ public class TetrisGameStart implements TetrisGameStartUseCase {
 
   @Override
   public GameStartedEvent start() {
+    endPreviousGame();
     final Game startedGame =
-        games.save(
+        games.add(
             new Game(
                 new GameId(UUID.randomUUID()),
                 false,
@@ -33,8 +34,12 @@ public class TetrisGameStart implements TetrisGameStartUseCase {
                 new Round(IDLE, 0),
                 false,
                 null,
-                new Settings(new Level(1))));
+                new Settings(new Level(1)), false));
     LOGGER.info("GAMING : Game started ({})", startedGame.id());
     return eventPublisher.publish(new GameStartedEvent(startedGame.id(), STARTED_LEVEL));
+  }
+
+  private void endPreviousGame() {
+    games.list().stream().map(Game::end).forEach(games::update);
   }
 }

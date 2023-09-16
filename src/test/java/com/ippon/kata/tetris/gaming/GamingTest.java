@@ -1,9 +1,9 @@
 package com.ippon.kata.tetris.gaming;
 
-import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.spy;
 
 import com.ippon.kata.tetris.executing.application.domain.PickTetromino;
 import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
@@ -15,15 +15,15 @@ import com.ippon.kata.tetris.executing.application.usecase.PickTetrominoUseCase;
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
-import com.ippon.kata.tetris.gaming.application.domain.Round;
-import com.ippon.kata.tetris.gaming.application.domain.Settings;
 import com.ippon.kata.tetris.gaming.application.domain.TetrisGameStart;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
+import com.ippon.kata.tetris.gaming.domain.GameFixture;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.Shape;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,12 +69,13 @@ public class GamingTest {
   }
 
   @Test
-  void startGame_should_createGameAndEmitGameStarted() {
+  void givenSartedGame_startGame_shouldEndPreviousAndStartNewGameByEmittingGameStarted() {
     TetrisGameStartUseCase tetrisGameStartUseCase =
         new TetrisGameStart(gameStartedEventEventPublisher, games);
-    final Game game =
-        new Game(new GameId(UUID.randomUUID()), false, false, new Round(IDLE, 0), false, null, new Settings(new Level(1)));
-    given(games.save(any())).willReturn(game);
+    final Game game = GameFixture.game(true,true,false);
+    final Game currentRunningGame = spy(GameFixture.game(true,true,false));
+    given(games.list()).willReturn(List.of(currentRunningGame));
+    given(games.add(any())).willReturn(game);
     given(gameStartedEventEventPublisher.publish(any()))
         .willReturn(new GameStartedEvent(game.id(), new Level(1)));
 
@@ -83,6 +84,7 @@ public class GamingTest {
     then(gameStartedEvent).isNotNull();
     then(gameStartedEvent.gameId()).isEqualTo(game.id());
     then(gameStartedEvent.level().value()).isEqualTo(1);
+    BDDMockito.then(currentRunningGame).should().end();
     BDDMockito.then(gameStartedEventEventPublisher).should().publish(gameStartedEvent);
   }
 }

@@ -23,7 +23,7 @@ public class StartNextRound implements StartNextRoundUseCase {
     @Override
     public NextRoundStartedEvent start(GameId gameId, ShapeType shapeType) {
         final Game game = games.get(gameId);
-        final Game saved = games.save(game.newRound());
+        final Game saved = games.add(game.newRound());
         LOGGER.info("GAMING : Start new round {}", saved);
         return eventPublisher.publish(new NextRoundStartedEvent(gameId, shapeType, saved.currentRound().index(), saved.settings().level()));
     }

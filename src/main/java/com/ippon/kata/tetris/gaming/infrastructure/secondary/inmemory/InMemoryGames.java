@@ -4,6 +4,7 @@ import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +14,26 @@ public class InMemoryGames implements Games {
     private final Map<GameId, Game> gameStore = new HashMap<>();
 
     @Override
-    public synchronized Game save(Game game) {
+    public synchronized Game add(Game game) {
         gameStore.put(game.id(), game);
         return game;
     }
 
     @Override
+    public Game update(Game game) {
+        if(gameStore.get(game.id())==null){
+            throw new IllegalArgumentException("Game should exist to be updated");
+        }
+        return add(game);
+    }
+
+    @Override
     public synchronized Game get(GameId gameId) {
         return gameStore.get(gameId);
+    }
+
+    @Override
+    public List<Game> list() {
+        return gameStore.values().stream().toList();
     }
 }

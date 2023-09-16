@@ -34,10 +34,13 @@ class StartNextRoundTest {
   @Test
   void startNextRound_shouldUpdateCurrentRoundAndEmitNextRoundStarted() {
     final GameId gameId = new GameId(UUID.randomUUID());
-    final Game game = GameFixture.game(gameId, new Round(IDLE, 0), new Settings(new Level(INITIAL_LEVEL)));
+    final Game game =
+        GameFixture.game(gameId, new Round(IDLE, 0), new Settings(new Level(INITIAL_LEVEL)));
     given(games.get(gameId)).willReturn(game);
-    final Game saved = GameFixture.game(gameId, new Round(STARTED, INITIAL_LEVEL), new Settings(new Level(INITIAL_LEVEL)));
-    given(games.save(saved)).willReturn(saved);
+    final Game saved =
+        GameFixture.game(
+            gameId, new Round(STARTED, INITIAL_LEVEL), new Settings(new Level(INITIAL_LEVEL)));
+    given(games.add(saved)).willReturn(saved);
     final ShapeType shapeType = ShapeType.I;
     final NextRoundStartedEvent roundStartedEvent =
         new NextRoundStartedEvent(gameId, shapeType, INITIAL_LEVEL, new Level(INITIAL_LEVEL));
@@ -53,10 +56,12 @@ class StartNextRoundTest {
   void givenIndexRounbd100_startNextRound_shouldIncreaseLevel() {
     final int nextLevel = 2;
     final GameId gameId = new GameId(UUID.randomUUID());
-    final Game game = GameFixture.game(gameId, new Round(IDLE, 100), new Settings(new Level(INITIAL_LEVEL)));
+    final Game game =
+        GameFixture.game(gameId, new Round(IDLE, 100), new Settings(new Level(INITIAL_LEVEL)));
     given(games.get(gameId)).willReturn(game);
-    final Game saved = GameFixture.game(gameId, new Round(STARTED, 101), new Settings(new Level(nextLevel)));
-    given(games.save(saved)).willReturn(saved);
+    final Game saved =
+        GameFixture.game(gameId, new Round(STARTED, 101), new Settings(new Level(nextLevel)));
+    given(games.add(saved)).willReturn(saved);
     final ShapeType shapeType = ShapeType.I;
     final NextRoundStartedEvent roundStartedEvent =
         new NextRoundStartedEvent(gameId, shapeType, 101, new Level(nextLevel));

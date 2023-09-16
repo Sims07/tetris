@@ -40,9 +40,9 @@ class GameListenerTest {
     void givenAllInitialized_onApplicationEvent_shouldSetGameAsPlayingAndStartANewRound() {
         final UUID gameIdValue = UUID.randomUUID();
         final GameId gameId = new GameId(gameIdValue);
-        given(games.get(gameId)).willReturn(new Game(gameId, false, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1))));
-        final Game game = new Game(gameId, true, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1)));
-        given(games.save(game)).willReturn(game);
+        given(games.get(gameId)).willReturn(new Game(gameId, false, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1)), false));
+        final Game game = new Game(gameId, true, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1)), false);
+        given(games.add(game)).willReturn(game);
 
         gameListener.onApplicationEvent(new BoardInitializedEventDTO(
             this,

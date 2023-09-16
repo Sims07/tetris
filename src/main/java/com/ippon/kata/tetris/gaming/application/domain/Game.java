@@ -11,7 +11,8 @@ public record Game(
     Round currentRound,
     boolean scoreInitialized,
     Tetromino waitingTetromino,
-    Settings settings) {
+    Settings settings,
+    boolean ended) {
 
   public static final int NB_MOVED_BEFORE_LEVEL_UP = 10;
 
@@ -27,6 +28,9 @@ public record Game(
 
   public Game newRound() {
     final Round nextRound = currentRound.next();
+    if (ended) {
+      throw new GameEndedException();
+    }
     return new Game(
         id,
         boardInitialized,
@@ -34,18 +38,20 @@ public record Game(
         nextRound,
         scoreInitialized,
         null,
-        settings(currentRound));
+        settings(currentRound),
+        ended());
   }
 
-  public Game tetrominoGenerated(ShapeType shapeType){
+  public Game tetrominoGenerated(ShapeType shapeType) {
     return new Game(
-        id(),
-        boardInitialized(),
+        id,
+        boardInitialized,
         true,
-        currentRound(),
-        scoreInitialized(),
+        currentRound,
+        scoreInitialized,
         new Tetromino(shapeType),
-        settings());
+        settings,
+        ended);
   }
 
   private Settings settings(Round nextRound) {
@@ -64,17 +70,38 @@ public record Game(
         new Round(RoundStatus.FINISHED, currentRound.index()),
         scoreInitialized,
         waitingTetromino,
-        settings);
+        settings,
+        ended);
   }
 
-  public Game initializeScore(){
+  public Game initializeScore() {
     return new Game(
-        id(),
-        boardInitialized(),
-        tetrominoGenerated(),
-        currentRound(),
+        id,
+        boardInitialized,
+        tetrominoGenerated,
+        currentRound,
         true,
-        waitingTetromino(),
-        settings());
+        waitingTetromino,
+        settings,
+        ended);
+  }
+
+  public boolean nextRoundAvailable() {
+    return !ended
+        && status() == GameStatus.PLAYING
+        && currentRound().status() != RoundStatus.STARTED
+        && waitingTetromino() != null;
+  }
+
+  public Game end() {
+    return new Game(
+        id,
+        boardInitialized,
+        tetrominoGenerated,
+        currentRound,
+        scoreInitialized,
+        waitingTetromino,
+        settings,
+        true);
   }
 }
