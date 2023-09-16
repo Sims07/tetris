@@ -4,6 +4,7 @@ import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartBu
 import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer.inYStartButtonRange;
 
 import com.ippon.kata.tetris.TetrisApplication;
+import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.infrastructure.primary.javafx.BoardRenderer;
 import com.ippon.kata.tetris.executing.infrastructure.primary.spring.BoardAPI;
 import com.ippon.kata.tetris.executing.infrastructure.primary.spring.TetrominoAPI;
@@ -157,6 +158,7 @@ public class TetrominoGame extends Application {
           switch (event.getCode()) {
             case DOWN -> tetrominoAPI.move(gameId(), Direction.DOWN);
             case LEFT -> tetrominoAPI.move(gameId(), Direction.LEFT);
+            case PAGE_DOWN -> moveDown();
             case RIGHT -> tetrominoAPI.move(gameId(), Direction.RIGHT);
             case SPACE -> tetrominoAPI.move(gameId(), Direction.ROTATE);
           }
@@ -167,6 +169,13 @@ public class TetrominoGame extends Application {
     primaryStage.setScene(scene);
     root.getChildren().add(canvas);
     return gc;
+  }
+
+  private void moveDown() {
+    while (!tetrominoAPI
+        .move(gameId(), Direction.DOWN)
+        .map(tetromino -> tetromino.tetromino().status() == TetraminoStatus.FIXED)
+        .orElse(true)) ;
   }
 
   private GameId gameId() {
