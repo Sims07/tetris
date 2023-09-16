@@ -71,11 +71,10 @@ public class ExecutingGameStartedListener {
     }
   }
 
-  private void eraseCompletedLines(GameId gameId) throws InterruptedException {
+  private void eraseCompletedLines(GameId gameId) {
     LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
     while (!linesErasedEvent.erasedLines().isEmpty()){
       linesErasedEvent= eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
-      Thread.sleep(100);
     }
   }
 

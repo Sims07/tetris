@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.then;
 
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedEventDTO;
 import com.ippon.kata.tetris.scoring.application.domain.Score;
-import com.ippon.kata.tetris.scoring.application.domain.ScoreInitializedEvent;
+import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
 import com.ippon.kata.tetris.scoring.infrastructure.primary.spring.PreparingGameStartedListener;
 import com.ippon.kata.tetris.shared.domain.GameId;
@@ -28,7 +28,7 @@ class GameStartedListenerTest {
     @Test
     void givenGameStarted_onApplicationEvent_initializeScore() {
         final UUID gameId = UUID.randomUUID();
-        given(initializeScore.init(new GameId(gameId))).willReturn(new ScoreInitializedEvent(
+        given(initializeScore.init(new GameId(gameId))).willReturn(new ScoreUpdatedEvent(
             new Score(
                 new GameId(gameId),
                 0

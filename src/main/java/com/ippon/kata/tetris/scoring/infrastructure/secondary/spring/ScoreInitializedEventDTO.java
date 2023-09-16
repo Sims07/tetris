@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris.scoring.infrastructure.secondary.spring;
 
-import com.ippon.kata.tetris.scoring.application.domain.ScoreInitializedEvent;
+import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import java.util.UUID;
 import org.springframework.context.ApplicationEvent;
 
@@ -13,7 +13,7 @@ public class ScoreInitializedEventDTO extends ApplicationEvent {
         this.gameId = gameId;
     }
 
-    public static ScoreInitializedEventDTO from(Object source, ScoreInitializedEvent event) {
+    public static ScoreInitializedEventDTO from(Object source, ScoreUpdatedEvent event) {
         return new ScoreInitializedEventDTO(source,
             event.score().gameId().value()
         );

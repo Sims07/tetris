@@ -19,11 +19,11 @@ public class EraseLine implements EraseLineUseCase {
     Board boardWithoutCompleteLines = boards.get(boardId);
     List<LineIndex> lineToErase = boardWithoutCompleteLines.lineToErase();
     if (lineToErase.isEmpty()) {
-      return new LinesErasedEvent(lineToErase);
+      return new LinesErasedEvent(lineToErase, boardId.gameId());
     } else {
       boardWithoutCompleteLines = boardWithoutCompleteLines.eraseLines(lineToErase);
       boards.save(boardWithoutCompleteLines);
-      return linesErasedEventEventPublisher.publish(new LinesErasedEvent(lineToErase));
+      return linesErasedEventEventPublisher.publish(new LinesErasedEvent(lineToErase, boardId.gameId()));
     }
   }
 }

@@ -3,7 +3,7 @@ package com.ippon.kata.tetris.scoring.application.usecase;
 import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.shared.domain.GameId;
 
-public interface InitializeScoreUseCase {
+public interface UpdateScoreUseCase {
 
-    ScoreUpdatedEvent init(GameId gameId);
+    ScoreUpdatedEvent erasedLines(GameId gameId, int i);
 }

@@ -5,11 +5,10 @@ import static org.mockito.BDDMockito.given;
 
 import com.ippon.kata.tetris.scoring.application.domain.InitializeScore;
 import com.ippon.kata.tetris.scoring.application.domain.Score;
-import com.ippon.kata.tetris.scoring.application.domain.ScoreInitializedEvent;
+import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.scoring.application.domain.Scores;
 import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
-import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,19 +20,15 @@ class InitializeScoreUseCaseTest {
 
     @Mock
     Scores scores;
-    @Mock
-    EventPublisher<ScoreInitializedEvent> eventPublisher;
 
     @Test
     void givenGame_initializeScore_shouldSaveScoreAndReturnScoreInitialized() {
-        InitializeScoreUseCase initializeScoreUseCase = new InitializeScore(scores, eventPublisher);
+        InitializeScoreUseCase initializeScoreUseCase = new InitializeScore(scores);
         final GameId gameId = new GameId(UUID.randomUUID());
         final Score score = new Score(gameId, 0);
         given(scores.save(score)).willReturn(score);
-        final ScoreInitializedEvent event = new ScoreInitializedEvent(score);
-        given(eventPublisher.publish(event)).willReturn(event);
 
-        final ScoreInitializedEvent scoreInitializedEvent = initializeScoreUseCase.init(gameId);
+        final ScoreUpdatedEvent scoreInitializedEvent = initializeScoreUseCase.init(gameId);
 
         then(scoreInitializedEvent).isNotNull();
         then(scoreInitializedEvent.score()).isNotNull();
