@@ -6,17 +6,17 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScoreInitializedPublisher implements EventPublisher<ScoreUpdatedEvent> {
+public class ScoreUpdatedPublisher implements EventPublisher<ScoreUpdatedEvent> {
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  public ScoreInitializedPublisher(ApplicationEventPublisher applicationEventPublisher) {
+  public ScoreUpdatedPublisher(ApplicationEventPublisher applicationEventPublisher) {
     this.applicationEventPublisher = applicationEventPublisher;
   }
 
   @Override
   public ScoreUpdatedEvent publish(ScoreUpdatedEvent event) {
-    applicationEventPublisher.publishEvent(ScoreInitializedEventDTO.from(this, event));
+    applicationEventPublisher.publishEvent(ScoreUpdatedEventDTO.from(this, event));
     return event;
   }
 }

@@ -7,7 +7,7 @@ import com.ippon.kata.tetris.gaming.application.domain.RoundStatus;
 import com.ippon.kata.tetris.gaming.application.domain.Tetromino;
 import com.ippon.kata.tetris.gaming.application.usecase.StartNextRoundUseCase;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
-import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreInitializedEventDTO;
+import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.model.BoardInitializedEventDTO;
@@ -68,7 +68,7 @@ public class GameListener {
 
     @Async
     @EventListener
-    public void onApplicationEvent(ScoreInitializedEventDTO event) {
+    public void onApplicationEvent(ScoreUpdatedEventDTO event) {
         final Game game = games.get(new GameId(event.getGameId()));
         final Game saved = games.save(
             new Game(
