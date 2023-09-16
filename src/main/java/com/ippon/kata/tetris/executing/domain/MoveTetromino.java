@@ -1,5 +1,6 @@
 package com.ippon.kata.tetris.executing.domain;
 
+import com.ippon.kata.tetris.executing.secondary.spring.TetrominoMovedPublisher;
 import com.ippon.kata.tetris.executing.usecase.MoveTetrominoUseCase;
 import com.ippon.kata.tetris.shared.Direction;
 import com.ippon.kata.tetris.shared.GameId;
@@ -8,10 +9,12 @@ import java.util.Optional;
 public class MoveTetromino implements MoveTetrominoUseCase {
 
     private final Boards boards;
+    private final TetrominoMovedPublisher eventPublisher;
 
-    public MoveTetromino(Boards boards) {
+    public MoveTetromino(Boards boards, TetrominoMovedPublisher eventPublisher) {
 
         this.boards = boards;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -21,11 +24,11 @@ public class MoveTetromino implements MoveTetrominoUseCase {
             .map(tetromino -> {
                     Board updatedBoard = board.move(tetromino, direction);
                     boards.save(updatedBoard);
-                    return new TetrominoMovedEvent(
+                    return eventPublisher.publish(new TetrominoMovedEvent(
                         gameId,
                         updatedBoard.fallingTetromino().orElseThrow(),
                         direction,
-                        false);
+                        false));
 
                 }
             );

@@ -12,6 +12,7 @@ import com.ippon.kata.tetris.executing.domain.Position;
 import com.ippon.kata.tetris.executing.domain.Tetromino;
 import com.ippon.kata.tetris.executing.domain.TetrominoFixture;
 import com.ippon.kata.tetris.executing.domain.TetrominoMovedEvent;
+import com.ippon.kata.tetris.executing.secondary.spring.TetrominoMovedPublisher;
 import com.ippon.kata.tetris.shared.Direction;
 import com.ippon.kata.tetris.shared.GameId;
 import com.ippon.kata.tetris.shared.ShapeType;
@@ -33,10 +34,12 @@ class MoveTetrominoUseCaseTest {
     MoveTetrominoUseCase moveTetrominoUseCase;
     @Mock
     Boards boards;
+    @Mock
+    TetrominoMovedPublisher tetrominoMovedPublisher;
 
     @BeforeEach
     void init() {
-        moveTetrominoUseCase = new MoveTetromino(boards);
+        moveTetrominoUseCase = new MoveTetromino(boards, tetrominoMovedPublisher);
     }
 
     @Test
@@ -66,6 +69,7 @@ class MoveTetrominoUseCaseTest {
         given(boards.get(boardId)).willReturn(
             boardWithFallingTetromino
         );
+        given(tetrominoMovedPublisher.publish(any())).willAnswer(i-> i.getArguments()[0]);
 
         final Optional<TetrominoMovedEvent> tetrominoMovedEvent = moveTetrominoUseCase.move(gameId, direction);
 

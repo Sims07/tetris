@@ -24,7 +24,6 @@ public record Board(
   }
 
   public Board {
-    final int nbSlots = Board.NB_COLUMNS * Board.NB_LINES;
     Asserts.withContext(getClass()).notEmpty(slots, "Slots should not be empty");
   }
 

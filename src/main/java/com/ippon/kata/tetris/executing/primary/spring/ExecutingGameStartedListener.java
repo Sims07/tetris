@@ -57,7 +57,7 @@ public class ExecutingGameStartedListener {
             final Tetromino tetromino = tetrominoMovedEvent.tetromino();
             LOGGER.info("Move down {}", tetromino);
             tetrominoMovedEvent = fallTetrominoUseCase.fall(new BoardId(new GameId(event.gameId())), tetromino);
-            Thread.sleep(100);
+            Thread.sleep(1000);
         }
     }
 }
