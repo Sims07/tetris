@@ -16,7 +16,7 @@ public class MoveTetrominoCommandListener {
 
   @Async
   @EventListener
-  public synchronized void onApplicationEvent(MoveTetrominoCmd event) {
+  public void onApplicationEvent(MoveTetrominoCmd event) {
     moveTetrominoUseCase.move(event.gameId(), event.direction());
   }
 }

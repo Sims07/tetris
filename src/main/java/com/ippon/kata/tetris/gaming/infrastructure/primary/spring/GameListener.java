@@ -29,7 +29,7 @@ public class GameListener {
 
   @Async
   @EventListener
-  public synchronized void onApplicationEvent(BoardInitializedEventDTO event) {
+  public void onApplicationEvent(BoardInitializedEventDTO event) {
     final Game game = games.get(new GameId(event.getGameId()));
     final Game gameSaved =
         games.add(
