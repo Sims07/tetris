@@ -5,11 +5,11 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
-import com.ippon.kata.tetris.gaming.application.domain.Level;
 import com.ippon.kata.tetris.gaming.application.domain.Round;
 import com.ippon.kata.tetris.gaming.application.domain.Settings;
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.inmemory.InMemoryGames;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Level;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 

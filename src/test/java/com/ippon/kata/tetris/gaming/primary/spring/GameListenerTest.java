@@ -7,7 +7,6 @@ import static org.mockito.Mockito.never;
 
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
-import com.ippon.kata.tetris.gaming.application.domain.Level;
 import com.ippon.kata.tetris.gaming.application.domain.Round;
 import com.ippon.kata.tetris.gaming.application.domain.Settings;
 import com.ippon.kata.tetris.gaming.application.domain.Tetromino;
@@ -15,6 +14,7 @@ import com.ippon.kata.tetris.gaming.application.usecase.StartNextRoundUseCase;
 import com.ippon.kata.tetris.gaming.infrastructure.primary.spring.GameListener;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.model.BoardInitializedEventDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;

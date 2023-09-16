@@ -4,6 +4,7 @@ import com.ippon.kata.tetris.executing.application.domain.BoardId;
 import com.ippon.kata.tetris.executing.application.domain.LinesErasedEvent;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndex;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndexes;
+import com.ippon.kata.tetris.executing.application.domain.Speed;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoPickedEvent;
 import com.ippon.kata.tetris.executing.application.usecase.EraseLineUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.FallTetrominoUseCase;
@@ -13,6 +14,7 @@ import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedE
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundStartedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,20 +65,20 @@ public class ExecutingGameStartedListener {
     final GameId gameId = new GameId(event.gameId());
     eraseCompletedLines(gameId);
     RoundIndex roundIndex = roundIndexes.add(new RoundIndex(event.roundIndex()));
-    
+
     final TetrominoPickedEvent tetrominoPickedEvent =
         pickTetrominoUseCase.pickTetromino(gameId, ShapeType.valueOf(event.shapeType()));
     fallTetrominoUseCase.fall(new BoardId(gameId), tetrominoPickedEvent.tetromino());
     while (roundIndex.equals(currentRoundIndex())) {
       applicationEventPublisher.publishEvent(new MoveTetrominoCmd(this, gameId, Direction.DOWN));
-      Thread.sleep(GAME_SPEED);
+      Thread.sleep(new Speed(new Level(event.level())).value());
     }
   }
 
   private void eraseCompletedLines(GameId gameId) {
     LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
-    while (!linesErasedEvent.erasedLines().isEmpty()){
-      linesErasedEvent= eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
+    while (!linesErasedEvent.erasedLines().isEmpty()) {
+      linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
     }
   }
 

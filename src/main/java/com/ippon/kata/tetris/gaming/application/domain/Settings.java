@@ -2,6 +2,8 @@ package com.ippon.kata.tetris.gaming.application.domain;
 
 import static com.ippon.kata.tetris.shared.asserts.Asserts.withContext;
 
+import com.ippon.kata.tetris.shared.domain.Level;
+
 public record Settings(Level level) {
 
   public Settings {

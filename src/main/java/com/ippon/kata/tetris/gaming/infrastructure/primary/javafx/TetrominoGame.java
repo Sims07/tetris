@@ -5,6 +5,7 @@ import com.ippon.kata.tetris.executing.infrastructure.primary.spring.BoardAPI;
 import com.ippon.kata.tetris.executing.infrastructure.primary.spring.TetrominoAPI;
 import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
+import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundStartedEventDTO;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;
@@ -36,9 +37,9 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 public class TetrominoGame extends Application {
 
-  private static final int WIDTH = 10; // the board is 12 cells wide
-  private static final int HEIGHT = 22; // ... and 18 cells high
-  private static final int BLOCK_SIZE = 40; // block size to render on screen
+  private static final int WIDTH = 10;
+  private static final int HEIGHT = 22;
+  private static final int BLOCK_SIZE = 40;
   public static final String TITLE = "Tetromino";
   public static final URL TETRIS_MP3 = TetrominoGame.class.getResource("/sounds/tetris-theme.mp3");
   public static final int TETROMINO_BLOC_SIZE = 4;
@@ -48,6 +49,11 @@ public class TetrominoGame extends Application {
       TetrominoGame.class.getResource("/sounds/erased_line.mp3");
   public static final String TETROMINO_SUIVANT = "Tetromino suivant";
   public static final String SCORE_S = "Score : %s";
+  public static final String LEVEL = "Level : %s";
+  public static final int TEXT_HEIGHT = 20;
+  public static final int TEXT_WIDTH = 300;
+  public static final double HALF = 2.0;
+  public static final int LEVEL_Y_OFFSET = 60;
   private ConfigurableApplicationContext applicationContext;
   private BoardAPI boardAPI;
   private TetrominoAPI tetrominoAPI;
@@ -125,11 +131,32 @@ public class TetrominoGame extends Application {
         (ApplicationListener<ScoreUpdatedEventDTO>)
             event -> Platform.runLater(() -> renderScore(graphicsContext, event)));
     applicationContext.addApplicationListener(
+        (ApplicationListener<NextRoundStartedEventDTO>)
+            event -> Platform.runLater(() -> renderLevel(graphicsContext, event)));
+    applicationContext.addApplicationListener(
         (ApplicationListener<LinesErasedEventDTO>)
-            event -> Platform.runLater(() -> renderErasedLines(event)));
+            event -> Platform.runLater(this::renderErasedLines));
     applicationContext.addApplicationListener(
         (ApplicationListener<TetrominoGeneratedEventDTO>)
             event -> Platform.runLater(() -> renderNextTetromino(graphicsContext, event)));
+  }
+
+  private void renderLevel(GraphicsContext graphicsContext, NextRoundStartedEventDTO event) {
+    graphicsContext.setFill(Color.WHITE);
+    final int x = WIDTH * BLOCK_SIZE + TEXT_HEIGHT;
+    final double y = HEIGHT * BLOCK_SIZE / HALF + LEVEL_Y_OFFSET;
+    graphicsContext.fillRect(x, y - TEXT_HEIGHT, TEXT_WIDTH, TEXT_HEIGHT);
+    graphicsContext.setFill(Color.BLACK);
+    graphicsContext.fillText(LEVEL.formatted(event.level()), x, y);
+  }
+
+  private void renderScore(GraphicsContext graphicsContext, ScoreUpdatedEventDTO event) {
+    graphicsContext.setFill(Color.WHITE);
+    final int x = WIDTH * BLOCK_SIZE + TEXT_HEIGHT;
+    final double y = HEIGHT * BLOCK_SIZE / HALF + TEXT_HEIGHT;
+    graphicsContext.fillRect(x, y - TEXT_HEIGHT, TEXT_WIDTH, TEXT_HEIGHT);
+    graphicsContext.setFill(Color.BLACK);
+    graphicsContext.fillText(SCORE_S.formatted(event.score()), x, y);
   }
 
   private void renderNextTetromino(
@@ -178,7 +205,7 @@ public class TetrominoGame extends Application {
     return new Shape(ShapeType.valueOf(shape));
   }
 
-  private void renderErasedLines(LinesErasedEventDTO event) {
+  private void renderErasedLines() {
     final AudioClip audioClip;
     try {
       audioClip = new AudioClip(LINE_ERASED_SOUND_MP3.toURI().toString());
@@ -187,15 +214,6 @@ public class TetrominoGame extends Application {
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private void renderScore(GraphicsContext graphicsContext, ScoreUpdatedEventDTO event) {
-    graphicsContext.setFill(Color.WHITE);
-    final int x = WIDTH * BLOCK_SIZE + 20;
-    final double y = HEIGHT * BLOCK_SIZE / 2.0 + 20;
-    graphicsContext.fillRect(x, y - BLOCK_SIZE, 300, 100);
-    graphicsContext.setFill(Color.BLACK);
-    graphicsContext.fillText(SCORE_S.formatted(event.score()), x, y);
   }
 
   private GraphicsContext initCanvas(Stage primaryStage) {
@@ -213,7 +231,7 @@ public class TetrominoGame extends Application {
         });
     scene.setOnMouseClicked(this::onMouseClicked);
 
-    final Canvas canvas = new Canvas(2.0 * WIDTH * BLOCK_SIZE, (double) HEIGHT * BLOCK_SIZE);
+    final Canvas canvas = new Canvas(HALF * WIDTH * BLOCK_SIZE, (double) HEIGHT * BLOCK_SIZE);
     GraphicsContext gc = canvas.getGraphicsContext2D();
     primaryStage.setTitle(TITLE);
     primaryStage.setScene(scene);

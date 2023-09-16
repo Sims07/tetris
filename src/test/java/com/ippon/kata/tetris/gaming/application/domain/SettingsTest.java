@@ -2,8 +2,8 @@ package com.ippon.kata.tetris.gaming.application.domain;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
+import com.ippon.kata.tetris.shared.domain.Level;
 import org.junit.jupiter.api.Test;
 
 class SettingsTest {

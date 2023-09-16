@@ -7,12 +7,12 @@ import static org.mockito.BDDMockito.given;
 
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
-import com.ippon.kata.tetris.gaming.application.domain.Level;
 import com.ippon.kata.tetris.gaming.application.domain.NextRoundStartedEvent;
 import com.ippon.kata.tetris.gaming.application.domain.Round;
 import com.ippon.kata.tetris.gaming.application.domain.Settings;
 import com.ippon.kata.tetris.gaming.application.domain.StartNextRound;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;

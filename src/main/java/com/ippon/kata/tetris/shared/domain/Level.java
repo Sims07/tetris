@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.gaming.application.domain;
+package com.ippon.kata.tetris.shared.domain;
 
 import static com.ippon.kata.tetris.shared.asserts.Asserts.withContext;
 
