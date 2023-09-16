@@ -6,13 +6,13 @@ import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 
 public class FallTetromino implements FallTetrominoUseCase {
 
-    private final EventPublisher<TetrominoMovedEvent> eventPublisher;
-    private final Boards boards;
+  private final EventPublisher<TetrominoMovedEvent> eventPublisher;
+  private final Boards boards;
 
-    public FallTetromino(EventPublisher<TetrominoMovedEvent> eventPublisher, Boards boards) {
-        this.eventPublisher = eventPublisher;
-        this.boards = boards;
-    }
+  public FallTetromino(EventPublisher<TetrominoMovedEvent> eventPublisher, Boards boards) {
+    this.eventPublisher = eventPublisher;
+    this.boards = boards;
+  }
 
     @Override
     public TetrominoMovedEvent fall(

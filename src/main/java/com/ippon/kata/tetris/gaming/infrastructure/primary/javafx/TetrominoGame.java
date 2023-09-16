@@ -11,7 +11,6 @@ import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.model.BoardDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.model.PositionDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;
-import java.util.List;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -58,7 +57,7 @@ public class TetrominoGame extends Application {
   private void registerListeners(GraphicsContext graphicsContext) {
     applicationContext.addApplicationListener(
         (ApplicationListener<TetrominoMovedEventDTO>)
-            event -> Platform.runLater(() -> renderTetromino(graphicsContext, event)));
+            event -> Platform.runLater(() -> renderTetromino(graphicsContext)));
   }
 
   private GraphicsContext initCanvas(Stage primaryStage) {
@@ -83,35 +82,45 @@ public class TetrominoGame extends Application {
     return gc;
   }
 
-  private void renderTetromino(GraphicsContext graphicsContext, TetrominoMovedEventDTO event) {
+  private void renderTetromino(GraphicsContext graphicsContext) {
     renderBoard(graphicsContext);
-    renderTetromino(graphicsContext, event.shapeType(), event.positions());
   }
 
   private void renderBoard(GraphicsContext graphicsContext) {
-    renderEmptyBoard(graphicsContext);
     if (gameId != null) {
       final BoardDTO board = boardAPI.booard(gameId.value());
       board
           .slots()
           .forEach(
               (key, value) ->
-                  value.ifPresent(
-                      tetrominoDTO -> renderTetromino(
-                          graphicsContext, tetrominoDTO.shape(), tetrominoDTO.positions())));
+              {
+                if(value.isEmpty()){
+                  renderEmptySlot(graphicsContext, Color.GRAY, key.y(), key.x());
+                }else{
+                  renderTetromino(
+                      graphicsContext, value.get().shape(), key);
+                }
+              }
+          );
     }
   }
 
-  private static void renderTetromino(
-      GraphicsContext graphicsContext, ShapeType tetrominoDTO, List<PositionDTO> tetrominoDTO1) {
+  private static void renderEmptySlot(GraphicsContext graphicsContext, Color gray, int key, int key1) {
+    graphicsContext.setFill(gray);
+    graphicsContext.fillRect(
+        (double) key * BLOCK_SIZE, (double) key1 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+    graphicsContext.strokeRect(
+        (double) key * BLOCK_SIZE, (double) key1 * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+  }
+
+    private static void renderTetromino(
+      GraphicsContext graphicsContext, ShapeType tetrominoDTO, PositionDTO positionDTO) {
     setTetrominoFillColor(graphicsContext, tetrominoDTO);
-    tetrominoDTO1.forEach(
-        positionDTO -> {
+
           graphicsContext.fillRect(
               positionDTO.y() * BLOCK_SIZE, positionDTO.x() * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
           graphicsContext.strokeRect(
               positionDTO.y() * BLOCK_SIZE, positionDTO.x() * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-        });
   }
 
   private static void setTetrominoFillColor(GraphicsContext graphicsContext, ShapeType shape) {
@@ -125,18 +134,6 @@ public class TetrominoGame extends Application {
           case T -> Color.PINK;
           case Z -> Color.BLUEVIOLET;
         });
-  }
-
-  private static void renderEmptyBoard(GraphicsContext graphicsContext) {
-    for (int i = 0; i < WIDTH; i++) {
-      for (int j = 0; j < HEIGHT; j++) {
-        graphicsContext.setFill(Color.DARKGRAY);
-        graphicsContext.fillRect(
-            (double) i * BLOCK_SIZE, (double) j * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-        graphicsContext.strokeRect(
-            (double) i * BLOCK_SIZE, (double) j * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-      }
-    }
   }
 
   private void startGame(TetrisGameStartUseCase tetrisGameStartUseCase) {

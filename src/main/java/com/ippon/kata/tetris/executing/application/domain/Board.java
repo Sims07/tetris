@@ -1,9 +1,14 @@
 package com.ippon.kata.tetris.executing.application.domain;
 
+import static java.util.stream.Collectors.*;
+
 import com.ippon.kata.tetris.shared.asserts.Asserts;
 import com.ippon.kata.tetris.shared.domain.Direction;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import org.slf4j.Logger;
@@ -11,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public record Board(
     BoardId boardId,
-    //TODO replace by value object slots
+    // TODO replace by value object slots
     Map<Position, Optional<Tetromino>> slots,
     Optional<Tetromino> fallingTetromino) {
 
@@ -102,4 +107,56 @@ public record Board(
     return updatedSlots;
   }
 
+  public Board eraseLines(List<LineIndex> lineToErase) {
+    final List<Integer> lineIndexValues = lineToErase.stream().map(LineIndex::value).toList();
+    Map<Position, Optional<Tetromino>> updatedBoard = new HashMap<>(NB_COLUMNS * NB_LINES);
+    IntStream.range(0, NB_LINES)
+        .forEach(
+            i ->
+                IntStream.range(0, NB_COLUMNS)
+                    .forEach(
+                        j -> {
+                          final Position position = new Position(j, i);
+                          if (lineIndexValues.contains(i)) {
+                            updatedBoard.put(position, Optional.empty());
+                          } else {
+                            updatedBoard.put(position, slots.get(position));
+                          }
+                        }));
+    Map<Position, Optional<Tetromino>> updatedBoard2 = new HashMap<>(NB_COLUMNS * NB_LINES);
+    final int translateOffset = lineToErase.size();
+    final int from = lineToErase.stream().mapToInt(LineIndex::value).min().getAsInt();
+    revRange(0, NB_LINES)
+        .forEach(
+            i ->
+                revRange(0, NB_COLUMNS)
+                    .forEach(
+                        j -> {
+                          final Position position = new Position(j, i);
+                          if(i<from){
+                            updatedBoard2.put(new Position(j, i+translateOffset), slots.get(position));
+                            updatedBoard2.put(new Position(j, i), Optional.empty());
+                          }else {
+                            updatedBoard2.put(position, slots.get(position));
+                          }
+                        }));
+    return new Board(boardId, updatedBoard2, fallingTetromino);
+  }
+  static IntStream revRange(int from, int to) {
+    return IntStream.range(from, to)
+        .map(i -> to - i + from - 1);
+  }
+  public List<LineIndex> lineToErase() {
+    return slots.entrySet().stream()
+        .collect(
+            groupingBy(
+                e -> e.getKey().y(), summingInt((pos1) -> pos1.getValue().isPresent() ? 1 : 0)))
+        .entrySet()
+        .stream()
+        .filter(entry -> entry.getValue() == NB_COLUMNS)
+        .map(Entry::getKey)
+        .map(LineIndex::new)
+        .sorted(Comparator.comparingInt(LineIndex::value).reversed())
+        .toList();
+  }
 }

@@ -9,6 +9,7 @@ import com.ippon.kata.tetris.executing.application.domain.BoardId;
 import com.ippon.kata.tetris.executing.application.domain.Boards;
 import com.ippon.kata.tetris.executing.application.domain.MoveTetromino;
 import com.ippon.kata.tetris.executing.application.domain.Position;
+import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoMovedEvent;
 import com.ippon.kata.tetris.executing.application.usecase.MoveTetrominoUseCase;
@@ -32,52 +33,45 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MoveTetrominoUseCaseTest {
 
-    MoveTetrominoUseCase moveTetrominoUseCase;
-    @Mock
-    Boards boards;
-    @Mock
-    TetrominoMovedPublisher tetrominoMovedPublisher;
+  MoveTetrominoUseCase moveTetrominoUseCase;
+  @Mock Boards boards;
+  @Mock TetrominoMovedPublisher tetrominoMovedPublisher;
 
-    @BeforeEach
-    void init() {
-        moveTetrominoUseCase = new MoveTetromino(boards, tetrominoMovedPublisher);
-    }
+  @BeforeEach
+  void init() {
+    moveTetrominoUseCase = new MoveTetromino(boards, tetrominoMovedPublisher);
+  }
 
-    @Test
-    void givenNoTetrominoReadyToFall_move_shouldDoNothing() {
-        final GameId gameId = new GameId(UUID.randomUUID());
-        final BoardId boardId = new BoardId(gameId);
-        given(boards.get(boardId)).willReturn(
-            new Board(
-                boardId
-            )
-        );
+  @Test
+  void givenNoTetrominoReadyToFall_move_shouldDoNothing() {
+    final GameId gameId = new GameId(UUID.randomUUID());
+    final BoardId boardId = new BoardId(gameId);
+    given(boards.get(boardId)).willReturn(new Board(boardId));
 
-        final Optional<TetrominoMovedEvent> tetrominoMovedEvent = moveTetrominoUseCase.move(gameId, Direction.DOWN);
+    final Optional<TetrominoMovedEvent> tetrominoMovedEvent =
+        moveTetrominoUseCase.move(gameId, Direction.DOWN);
 
-        then(tetrominoMovedEvent).isEmpty();
-    }
+    then(tetrominoMovedEvent).isEmpty();
+  }
 
-    @ParameterizedTest
-    @EnumSource(Direction.class)
-    void givenFallingTetrominoWithNextSlotAvailable_move_shouldMoveTetromino(Direction direction) {
-        final GameId gameId = new GameId(UUID.randomUUID());
-        final BoardId boardId = new BoardId(gameId);
-        final Board board = new Board(
-            boardId
-        );
-        final Board boardWithFallingTetromino = board.move(TetrominoFixture.tetromino(ShapeType.I), Direction.DOWN);
-        given(boards.get(boardId)).willReturn(
-            boardWithFallingTetromino
-        );
-        given(tetrominoMovedPublisher.publish(any())).willAnswer(i-> i.getArguments()[0]);
+  @ParameterizedTest
+  @EnumSource(Direction.class)
+  void givenFallingTetrominoWithNextSlotAvailable_move_shouldMoveTetromino(Direction direction) {
+    final GameId gameId = new GameId(UUID.randomUUID());
+    final BoardId boardId = new BoardId(gameId);
+    final Board board = new Board(boardId);
+    final Board boardWithFallingTetromino =
+        board.move(TetrominoFixture.tetromino(ShapeType.I, TetraminoStatus.IDLE), Direction.DOWN);
+    given(boards.get(boardId)).willReturn(boardWithFallingTetromino);
+    given(tetrominoMovedPublisher.publish(any())).willAnswer(i -> i.getArguments()[0]);
 
-        final Optional<TetrominoMovedEvent> tetrominoMovedEvent = moveTetrominoUseCase.move(gameId, direction);
+    final Optional<TetrominoMovedEvent> tetrominoMovedEvent =
+        moveTetrominoUseCase.move(gameId, direction);
 
-        then(tetrominoMovedEvent).isNotEmpty();
-        BDDMockito.then(boards).should().save(any());
-        thenTetrominoShouldBeAt(tetrominoMovedEvent.get().tetromino(), direction);
-    }
+    then(tetrominoMovedEvent).isNotEmpty();
+    BDDMockito.then(boards).should().save(any());
+    thenTetrominoShouldBeAt(tetrominoMovedEvent.get().tetromino(), direction);
+  }
 
     private void thenTetrominoShouldBeAt(Tetromino tetromino, Direction direction) {
         switch (direction) {

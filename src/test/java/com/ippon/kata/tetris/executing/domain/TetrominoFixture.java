@@ -10,13 +10,13 @@ import java.util.UUID;
 
 public class TetrominoFixture {
 
-    public static Tetromino tetromino(ShapeType shapeType) {
+    public static Tetromino tetromino(ShapeType shapeType, TetraminoStatus tetraminoStatus) {
         final Shape shape = new Shape(shapeType);
         return new Tetromino(
             new TetrominoId(
                 UUID.randomUUID())
             , shape
-            , TetraminoStatus.IDLE
+            , tetraminoStatus
             , shape.initPositions(),
             new RotationIndex(0));
     }

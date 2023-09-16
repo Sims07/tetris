@@ -4,10 +4,4 @@ import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
 
 public record TetrominoMovedEvent(
-    GameId gameId,
-    Tetromino tetromino,
-    Direction direction,
-    boolean outOfScope
-) {
-
-}
+    GameId gameId, Tetromino tetromino, Direction direction, boolean outOfScope) {}

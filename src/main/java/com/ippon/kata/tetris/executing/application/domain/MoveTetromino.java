@@ -18,7 +18,7 @@ public class MoveTetromino implements MoveTetrominoUseCase {
     }
 
     @Override
-    public synchronized Optional<TetrominoMovedEvent> move(GameId gameId, Direction direction) {
+    public Optional<TetrominoMovedEvent> move(GameId gameId, Direction direction) {
         try {
             final Board board = boards.get(new BoardId(gameId));
             return board.fallingTetromino()

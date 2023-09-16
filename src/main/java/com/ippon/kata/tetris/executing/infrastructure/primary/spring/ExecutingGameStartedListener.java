@@ -1,9 +1,11 @@
 package com.ippon.kata.tetris.executing.infrastructure.primary.spring;
 
 import com.ippon.kata.tetris.executing.application.domain.BoardId;
+import com.ippon.kata.tetris.executing.application.domain.LinesErasedEvent;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndex;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndexes;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoPickedEvent;
+import com.ippon.kata.tetris.executing.application.usecase.EraseLineUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.FallTetrominoUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.InitializeBoardUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.PickTetrominoUseCase;
@@ -25,6 +27,7 @@ public class ExecutingGameStartedListener {
   private final InitializeBoardUseCase initializeBoardUseCase;
   private final PickTetrominoUseCase pickTetrominoUseCase;
   private final FallTetrominoUseCase fallTetrominoUseCase;
+  private final EraseLineUseCase eraseLineUseCase;
   private final ApplicationEventPublisher applicationEventPublisher;
   private final RoundIndexes roundIndexes;
 
@@ -32,12 +35,14 @@ public class ExecutingGameStartedListener {
       InitializeBoardUseCase initializeBoardUseCase,
       PickTetrominoUseCase pickTetrominoUseCase,
       FallTetrominoUseCase fallTetrominoUseCase,
+      EraseLineUseCase eraseLineUseCase,
       ApplicationEventPublisher applicationEventPublisher,
       RoundIndexes roundIndexes) {
 
     this.initializeBoardUseCase = initializeBoardUseCase;
     this.pickTetrominoUseCase = pickTetrominoUseCase;
     this.fallTetrominoUseCase = fallTetrominoUseCase;
+    this.eraseLineUseCase = eraseLineUseCase;
     this.applicationEventPublisher = applicationEventPublisher;
     this.roundIndexes = roundIndexes;
   }
@@ -54,6 +59,7 @@ public class ExecutingGameStartedListener {
   public void onApplicationEvent(NextRoundStartedEventDTO event) throws InterruptedException {
     LOGGER.info("EXECUTING : Receive next round started {}", event.gameId());
     final GameId gameId = new GameId(event.gameId());
+    eraseCompletedLines(gameId);
     RoundIndex roundIndex = roundIndexes.add(new RoundIndex(event.roundIndex()));
     
     final TetrominoPickedEvent tetrominoPickedEvent =
@@ -62,6 +68,14 @@ public class ExecutingGameStartedListener {
     while (roundIndex.equals(currentRoundIndex())) {
       applicationEventPublisher.publishEvent(new MoveTetrominoCmd(this, gameId, Direction.DOWN));
       Thread.sleep(1000);
+    }
+  }
+
+  private void eraseCompletedLines(GameId gameId) throws InterruptedException {
+    LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
+    while (!linesErasedEvent.erasedLines().isEmpty()){
+      linesErasedEvent= eraseLineUseCase.eraseCompletedLines(new BoardId(gameId));
+      Thread.sleep(100);
     }
   }
 

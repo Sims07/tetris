@@ -2,12 +2,15 @@ package com.ippon.kata.tetris;
 
 import com.ippon.kata.tetris.executing.application.domain.BoardInitializedEvent;
 import com.ippon.kata.tetris.executing.application.domain.Boards;
+import com.ippon.kata.tetris.executing.application.domain.EraseLine;
 import com.ippon.kata.tetris.executing.application.domain.FallTetromino;
 import com.ippon.kata.tetris.executing.application.domain.InitializeBoard;
+import com.ippon.kata.tetris.executing.application.domain.LinesErasedEvent;
 import com.ippon.kata.tetris.executing.application.domain.MoveTetromino;
 import com.ippon.kata.tetris.executing.application.domain.PickTetromino;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoMovedEvent;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoPickedEvent;
+import com.ippon.kata.tetris.executing.application.usecase.EraseLineUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.FallTetrominoUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.InitializeBoardUseCase;
 import com.ippon.kata.tetris.executing.application.usecase.MoveTetrominoUseCase;
@@ -77,7 +80,14 @@ public class TetrisConfig {
   }
 
   @Bean
-  MoveTetrominoUseCase moveTetrominoUseCase(Boards boards, TetrominoMovedPublisher tetrominoMovedPublisher) {
+  EraseLineUseCase eraseLineUseCase(
+      Boards boards, EventPublisher<LinesErasedEvent> eventPublisher) {
+    return new EraseLine(boards, eventPublisher);
+  }
+
+  @Bean
+  MoveTetrominoUseCase moveTetrominoUseCase(
+      Boards boards, TetrominoMovedPublisher tetrominoMovedPublisher) {
     return new MoveTetromino(boards, tetrominoMovedPublisher);
   }
 }
