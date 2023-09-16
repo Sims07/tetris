@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import com.ippon.kata.tetris.executing.application.domain.BoardId;
+import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndex;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndexes;
 import com.ippon.kata.tetris.executing.application.domain.Shape;
@@ -60,7 +61,7 @@ class ExecutingGameStartedListenerTest {
                 new TetrominoId(UUID.randomUUID()),
                 new Shape(ShapeType.L),
                 TetraminoStatus.IDLE,
-                null));
+                null, new RotationIndex(0)));
     given(pickTetrominoUseCase.pickTetromino(gameId, ShapeType.L)).willReturn(tetrominoPickedEvent);
     given(fallTetrominoUseCase.fall(new BoardId(gameId), tetrominoPickedEvent.tetromino()))
         .willReturn(

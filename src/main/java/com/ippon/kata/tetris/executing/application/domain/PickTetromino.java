@@ -23,8 +23,8 @@ public class PickTetromino implements PickTetrominoUseCase {
         final Tetromino tetromino = new Tetromino(
             new TetrominoId(UUID.randomUUID()), shape,
             TetraminoStatus.IDLE,
-            shape.initPositions()
-        );
+            shape.initPositions(),
+            new RotationIndex(0));
         LOGGER.info("EXECUTING : Command pick tetromino {}", tetromino);
         return eventPublisher.publish(new TetrominoPickedEvent(
             gameId,

@@ -3,7 +3,6 @@ package com.ippon.kata.tetris.executing.application.domain;
 import com.ippon.kata.tetris.shared.asserts.Asserts;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -103,7 +102,4 @@ public record Board(
     return updatedSlots;
   }
 
-  public List<Tetromino> busy() {
-    return slots().values().stream().filter(Optional::isPresent).map(Optional::get).toList();
-  }
 }

@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.ippon.kata.tetris.executing.application.domain.PickTetromino;
+import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
 import com.ippon.kata.tetris.executing.application.domain.Shape;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
@@ -51,8 +52,8 @@ public class GamingTest {
             new Tetromino(
                 new TetrominoId(UUID.randomUUID()), shape,
                 TetraminoStatus.IDLE,
-                shape.initPositions()
-            )
+                shape.initPositions(),
+                new RotationIndex(0))
         );
         given(tetrominoPickedEventEventPublisher.publish(any())).willReturn(event);
 

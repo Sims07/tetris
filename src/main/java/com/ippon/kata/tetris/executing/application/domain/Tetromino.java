@@ -1,6 +1,7 @@
 package com.ippon.kata.tetris.executing.application.domain;
 
 import com.ippon.kata.tetris.shared.domain.Direction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,13 +10,22 @@ import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 public record Tetromino(
-    TetrominoId id, Shape shape, TetraminoStatus status, List<Position> positions) {
+    TetrominoId id,
+    Shape shape,
+    TetraminoStatus status,
+    List<Position> positions,
+    RotationIndex rotationIndex) {
 
   public static final int MOVE_OFFSET = 1;
   public static final int LOW_LIMIT = 0;
 
   public Tetromino(Shape shape) {
-    this(new TetrominoId(UUID.randomUUID()), shape, TetraminoStatus.MOVING, null);
+    this(
+        new TetrominoId(UUID.randomUUID()),
+        shape,
+        TetraminoStatus.MOVING,
+        null,
+        new RotationIndex(0));
   }
 
   private static Position down(Position initPosition) {
@@ -40,8 +50,20 @@ public record Tetromino(
   }
 
   private Tetromino rotate(Map<Position, Optional<Tetromino>> slots) {
-    return null;
+    return new Tetromino(id, shape, status, rotatePositions(), rotationIndex.next());
   }
+
+  private List<Position> rotatePositions() {
+    //TODO test cannot rotate
+    List<Position> rotatedPositions = new ArrayList<>();
+    final List<Position> positions1 = shape().translatedRotationPositions(rotationIndex);
+    for (int i = 0; i < positions().size(); i++) {
+      Position newPosition = positions().get(i).add(positions1.get(i));
+      rotatedPositions.add(newPosition);
+    }
+    return rotatedPositions;
+  }
+
 
   private Tetromino moveRight(Map<Position, Optional<Tetromino>> slots) {
     if (cannotMoveRight(slots)) {
@@ -71,7 +93,6 @@ public record Tetromino(
     return tetrominoTouched(slots, position -> position.x() - MOVE_OFFSET);
   }
 
-
   private boolean cannotMoveRight(Map<Position, Optional<Tetromino>> slots) {
     return borderRightTouched() || tetrominoRightTouched(slots);
   }
@@ -80,11 +101,13 @@ public record Tetromino(
     return tetrominoTouched(slots, position -> position.x() + MOVE_OFFSET);
   }
 
-  private boolean tetrominoTouched(Map<Position, Optional<Tetromino>> slots, ToIntFunction<Position> toIntFunction) {
+  private boolean tetrominoTouched(
+      Map<Position, Optional<Tetromino>> slots, ToIntFunction<Position> toIntFunction) {
     return positions.stream()
         .anyMatch(
             position -> {
-              final Position nextPosition = new Position(toIntFunction.applyAsInt(position), position.y());
+              final Position nextPosition =
+                  new Position(toIntFunction.applyAsInt(position), position.y());
               final Optional<Tetromino> tetrominoNextPosition = slots.get(nextPosition);
               return tetrominoNextPosition != null
                   && tetrominoNextPosition.isPresent()
@@ -102,7 +125,11 @@ public record Tetromino(
 
   private Tetromino moveTo(MoveTo moveDirection) {
     return new Tetromino(
-        id, shape, TetraminoStatus.MOVING, positions.stream().map(moveDirection).toList());
+        id,
+        shape,
+        TetraminoStatus.MOVING,
+        positions.stream().map(moveDirection).toList(),
+        rotationIndex);
   }
 
   public Tetromino moveDown() {
@@ -111,7 +138,11 @@ public record Tetromino(
 
   public Tetromino fixe() {
     return new Tetromino(
-        new TetrominoId(UUID.randomUUID()), shape, TetraminoStatus.FIXED, positions);
+        new TetrominoId(UUID.randomUUID()),
+        shape,
+        TetraminoStatus.FIXED,
+        positions,
+        rotationIndex);
   }
 
   interface MoveTo extends Function<Position, Position> {}

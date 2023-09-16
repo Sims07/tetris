@@ -9,6 +9,7 @@ import com.ippon.kata.tetris.executing.application.domain.BoardId;
 import com.ippon.kata.tetris.executing.application.domain.Boards;
 import com.ippon.kata.tetris.executing.application.domain.FallTetromino;
 import com.ippon.kata.tetris.executing.application.domain.Position;
+import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
 import com.ippon.kata.tetris.executing.application.domain.Shape;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
@@ -50,8 +51,8 @@ class FallTetrominoTest {
             new Tetromino(
                 new TetrominoId(UUID.randomUUID()), shape,
                 TetraminoStatus.MOVING,
-                shape.initPositions()
-            ),
+                shape.initPositions(),
+                new RotationIndex(0)),
             Direction.DOWN,
             false
         );
@@ -62,8 +63,8 @@ class FallTetrominoTest {
             new Tetromino(
                 new TetrominoId(UUID.randomUUID()), shape,
                 TetraminoStatus.MOVING,
-                shape.initPositions()
-            ));
+                shape.initPositions(),
+                new RotationIndex(0)));
 
         then(movedEvent).isNotNull();
         then(movedEvent.tetromino()).isNotNull();
@@ -85,8 +86,8 @@ class FallTetrominoTest {
                     .stream()
                     .map(position ->
                         new Position(position.x() + Board.NB_LINES - 1, position.y()))
-                    .toList()
-            ))
+                    .toList(),
+                new RotationIndex(0)))
         );
         given(boards.get(boardId))
             .willReturn(boardGot);
@@ -97,8 +98,8 @@ class FallTetrominoTest {
             new Tetromino(
                 new TetrominoId(UUID.randomUUID()), shape,
                 TetraminoStatus.MOVING,
-                shape.initPositions()
-            ));
+                shape.initPositions(),
+                new RotationIndex(0)));
 
         then(movedEvent).isNotNull();
         then(movedEvent.tetromino()).isNotNull();

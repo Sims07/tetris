@@ -1,5 +1,6 @@
 package com.ippon.kata.tetris.executing.domain;
 
+import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
 import com.ippon.kata.tetris.executing.application.domain.Shape;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
@@ -16,7 +17,7 @@ public class TetrominoFixture {
                 UUID.randomUUID())
             , shape
             , TetraminoStatus.IDLE
-            , shape.initPositions()
-        );
+            , shape.initPositions(),
+            new RotationIndex(0));
     }
 }

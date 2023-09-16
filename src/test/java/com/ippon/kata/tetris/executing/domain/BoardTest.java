@@ -6,6 +6,7 @@ import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 
 import com.ippon.kata.tetris.executing.application.domain.Board;
 import com.ippon.kata.tetris.executing.application.domain.Position;
+import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
 import com.ippon.kata.tetris.executing.application.domain.Shape;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
@@ -36,7 +37,7 @@ class BoardTest {
         final Shape shape = new Shape(ShapeType.S);
 
         final Board board1 = board.move(new Tetromino(new TetrominoId(UUID.randomUUID()),
-            shape, TetraminoStatus.IDLE, shape.initPositions()), Direction.DOWN);
+            shape, TetraminoStatus.IDLE, shape.initPositions(), new RotationIndex(0)), Direction.DOWN);
 
         then(board1.fallingTetromino()).isNotEmpty();
         then(board1.fallingTetromino().map(Tetromino::positions).orElseThrow()).isEqualTo(shape.initPositions());
@@ -52,7 +53,7 @@ class BoardTest {
         final Shape shape = new Shape(ShapeType.S);
         final Tetromino tetromino = new Tetromino(new TetrominoId(UUID.randomUUID()), shape,
             TetraminoStatus.MOVING,
-            shape.initPositions());
+            shape.initPositions(), new RotationIndex(0));
         final Board board1 = givenNewBoard();
         final Board board = new Board(
             board1.boardId(),
@@ -72,7 +73,7 @@ class BoardTest {
         final Shape shape = new Shape(ShapeType.S);
         final Tetromino tetromino = new Tetromino(new TetrominoId(UUID.randomUUID()), shape,
             TetraminoStatus.MOVING,
-            shape.initPositions().stream().map(p -> new Position(p.x(), p.y() + Board.NB_LINES)).toList());
+            shape.initPositions().stream().map(p -> new Position(p.x(), p.y() + Board.NB_LINES)).toList(), new RotationIndex(0));
         final Board board1 = givenNewBoard();
         final Board board = new Board(
             board1.boardId(),
@@ -89,7 +90,7 @@ class BoardTest {
         final Shape shape = new Shape(ShapeType.I);
         final Tetromino tetromino = new Tetromino(new TetrominoId(UUID.randomUUID()), shape,
             TetraminoStatus.MOVING,
-            shape.initPositions().stream().map(p -> new Position(0, p.y())).toList());
+            shape.initPositions().stream().map(p -> new Position(0, p.y())).toList(), new RotationIndex(0));
         final Board board = givenNewBoard();
 
         final Board moved = board.move(tetromino, Direction.LEFT);
