@@ -1,6 +1,7 @@
 package com.ippon.kata.tetris.executing.application.domain;
 
 import com.ippon.kata.tetris.shared.domain.Direction;
+import com.ippon.kata.tetris.shared.domain.Shape;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

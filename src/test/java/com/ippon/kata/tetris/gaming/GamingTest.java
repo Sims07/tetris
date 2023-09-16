@@ -7,7 +7,6 @@ import static org.mockito.BDDMockito.given;
 
 import com.ippon.kata.tetris.executing.application.domain.PickTetromino;
 import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
-import com.ippon.kata.tetris.executing.application.domain.Shape;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoId;
@@ -20,6 +19,7 @@ import com.ippon.kata.tetris.gaming.application.domain.Round;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStart;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Shape;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;

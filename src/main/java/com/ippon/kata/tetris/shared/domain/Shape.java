@@ -1,6 +1,7 @@
-package com.ippon.kata.tetris.executing.application.domain;
+package com.ippon.kata.tetris.shared.domain;
 
-import com.ippon.kata.tetris.shared.domain.ShapeType;
+import com.ippon.kata.tetris.executing.application.domain.Position;
+import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
 import java.util.List;
 
 public record Shape(ShapeType shapeType) {

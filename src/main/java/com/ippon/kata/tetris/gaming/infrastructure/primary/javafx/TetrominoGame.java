@@ -9,6 +9,7 @@ import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.Tetromino
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Shape;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.model.BoardDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
@@ -38,6 +39,9 @@ public class TetrominoGame extends Application {
   private static final int BLOCK_SIZE = 40; // block size to render on screen
   public static final String TITLE = "Tetromino";
   public static final URL TETRIS_MP3 = TetrominoGame.class.getResource("/sounds/tetris-theme.mp3");
+  public static final int TETROMINO_BLOC_SIZE = 4;
+  public static final int PADDING = 20;
+  public static final int FONT_SIZE = 25;
   private ConfigurableApplicationContext applicationContext;
   private BoardAPI boardAPI;
   private TetrominoAPI tetrominoAPI;
@@ -57,7 +61,8 @@ public class TetrominoGame extends Application {
   public void start(Stage primaryStage) throws Exception {
     GraphicsContext graphicsContext = initCanvas(primaryStage);
     registerListeners(graphicsContext);
-
+    graphicsContext.setFont(new Font(FONT_SIZE));
+    
     startGame(tetrisGameStartUseCase);
     renderBoard(graphicsContext);
     playTetrisThemeMusic();
@@ -85,19 +90,50 @@ public class TetrominoGame extends Application {
     applicationContext.addApplicationListener(
         (ApplicationListener<TetrominoGeneratedEventDTO>)
             event -> Platform.runLater(() -> renderNextTetromino(graphicsContext, event)));
-
   }
 
-  private void renderNextTetromino(GraphicsContext graphicsContext, TetrominoGeneratedEventDTO event) {
+  private void renderNextTetromino(
+      GraphicsContext graphicsContext, TetrominoGeneratedEventDTO event) {
     final int boardWidth = WIDTH * BLOCK_SIZE;
-    renderTetromino(graphicsContext, ShapeType.valueOf(event.getShape()), boardWidth + boardWidth/2, 20);
+    final int xOrigin = boardWidth + boardWidth / 2 - BLOCK_SIZE;
+    final int yOrigin = 3 * BLOCK_SIZE;
+    clearPreviousTetromino(graphicsContext, xOrigin, yOrigin);
+    wrapInShape(event.getShape())
+        .initPositions()
+        .forEach(
+            position ->
+                renderTetromino(
+                    graphicsContext,
+                    ShapeType.valueOf(event.getShape()),
+                    xOrigin + (position.x() - TETROMINO_BLOC_SIZE) * BLOCK_SIZE,
+                    yOrigin + (position.y()) * BLOCK_SIZE));
+  }
+
+  private void clearPreviousTetromino(GraphicsContext graphicsContext, int x, int y) {
+    final double blockSize = BLOCK_SIZE;
+    graphicsContext.setFill(Color.BLACK);
+    graphicsContext.fillText("Tetromino suivant", x - blockSize, y - blockSize - PADDING);
+    graphicsContext.strokeRect(
+        x - blockSize,
+        y - blockSize,
+        (1 + TETROMINO_BLOC_SIZE) * blockSize,
+        TETROMINO_BLOC_SIZE * blockSize);
+    graphicsContext.setFill(Color.LIGHTGRAY);
+    graphicsContext.fillRect(
+        x - blockSize,
+        y - blockSize,
+        (1 + TETROMINO_BLOC_SIZE) * blockSize,
+        TETROMINO_BLOC_SIZE * blockSize);
+  }
+
+  private Shape wrapInShape(String shape) {
+    return new Shape(ShapeType.valueOf(shape));
   }
 
   private void renderErasedLines(GraphicsContext gc, LinesErasedEventDTO event) {}
 
   private void renderScore(GraphicsContext graphicsContext, ScoreUpdatedEventDTO event) {
     graphicsContext.setFill(Color.WHITE);
-    graphicsContext.setFont(new Font(25));
     final int x = WIDTH * BLOCK_SIZE + 20;
     final double y = HEIGHT * BLOCK_SIZE / 2.0 + 20;
     graphicsContext.fillRect(x, y - BLOCK_SIZE, 300, 100);
@@ -141,7 +177,11 @@ public class TetrominoGame extends Application {
                 if (value.isEmpty()) {
                   renderEmptySlot(graphicsContext, Color.GRAY, key.y(), key.x());
                 } else {
-                  renderTetromino(graphicsContext, value.get().shape(), key.y() * BLOCK_SIZE, key.x() * BLOCK_SIZE);
+                  renderTetromino(
+                      graphicsContext,
+                      value.get().shape(),
+                      key.y() * BLOCK_SIZE,
+                      key.x() * BLOCK_SIZE);
                 }
               });
     }
@@ -160,10 +200,8 @@ public class TetrominoGame extends Application {
       GraphicsContext graphicsContext, ShapeType tetrominoDTO, int x, int y) {
     setTetrominoFillColor(graphicsContext, tetrominoDTO);
 
-    graphicsContext.fillRect(
-        x, y, BLOCK_SIZE, BLOCK_SIZE);
-    graphicsContext.strokeRect(
-        x, y, BLOCK_SIZE, BLOCK_SIZE);
+    graphicsContext.fillRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+    graphicsContext.strokeRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
   }
 
   private static void setTetrominoFillColor(GraphicsContext graphicsContext, ShapeType shape) {

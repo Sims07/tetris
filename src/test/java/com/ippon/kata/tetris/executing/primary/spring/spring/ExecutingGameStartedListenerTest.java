@@ -8,7 +8,6 @@ import com.ippon.kata.tetris.executing.application.domain.BoardId;
 import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndex;
 import com.ippon.kata.tetris.executing.application.domain.RoundIndexes;
-import com.ippon.kata.tetris.executing.application.domain.Shape;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoId;
@@ -22,6 +21,7 @@ import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedE
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundStartedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Shape;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

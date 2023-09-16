@@ -2,6 +2,7 @@ package com.ippon.kata.tetris.executing.application.domain;
 
 import com.ippon.kata.tetris.executing.application.usecase.PickTetrominoUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Shape;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;
