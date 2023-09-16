@@ -50,6 +50,7 @@ public class TetrominoGame extends Application {
   private static final URL LINE_ERASED_SOUND_MP3 =
       TetrominoGame.class.getResource("/sounds/erased_line.mp3");
   public static final double HALF = 2.0;
+  public static final double VOLUME = 0.1;
   private ConfigurableApplicationContext applicationContext;
   private BoardAPI boardAPI;
   private TetrominoAPI tetrominoAPI;
@@ -61,6 +62,8 @@ public class TetrominoGame extends Application {
   private final BoardRenderer boardRenderer;
   private final NextTetrominoRenderer nextTetrominoRenderer;
   private final StartButtonRenderer startButtonRenderer;
+  private final Canvas canvas;
+  private Thread startGameThread;
 
   public TetrominoGame() {
     levelRenderer = new LevelRenderer();
@@ -68,6 +71,7 @@ public class TetrominoGame extends Application {
     boardRenderer = new BoardRenderer();
     nextTetrominoRenderer = new NextTetrominoRenderer();
     startButtonRenderer = new StartButtonRenderer();
+    canvas = new Canvas(HALF * WIDTH * BLOCK_SIZE, (double) HEIGHT * BLOCK_SIZE);
   }
 
   @Override
@@ -98,7 +102,7 @@ public class TetrominoGame extends Application {
     mediaPlayer = new MediaPlayer(mediaMusicGame);
     mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
     mediaPlayer.setAutoPlay(true);
-    mediaPlayer.setVolume(0.1);
+    mediaPlayer.setVolume(VOLUME);
   }
 
   private void playTetrisThemeMusic() {
@@ -148,8 +152,6 @@ public class TetrominoGame extends Application {
           }
         });
     scene.setOnMouseClicked(this::onMouseClicked);
-
-    final Canvas canvas = new Canvas(HALF * WIDTH * BLOCK_SIZE, (double) HEIGHT * BLOCK_SIZE);
     GraphicsContext gc = canvas.getGraphicsContext2D();
     primaryStage.setTitle(TITLE);
     primaryStage.setScene(scene);
@@ -171,18 +173,23 @@ public class TetrominoGame extends Application {
 
   private void startGame() {
     gameId = null;
-    Task<GameStartedEvent> task =
-        new Task<>() {
-          @Override
-          protected GameStartedEvent call() {
-            final GameStartedEvent gameStartedEvent = tetrisGameStartUseCase.start();
-            gameId = gameStartedEvent.gameId();
-            return gameStartedEvent;
-          }
-        };
-    Thread th = new Thread(task);
-    th.setDaemon(true);
-    th.start();
+    if (startGameThread != null && startGameThread.isAlive()) {
+      startGameThread.interrupt();
+    }
+    startGameThread = new Thread(startGameTask());
+    startGameThread.setDaemon(true);
+    startGameThread.start();
+  }
+
+  private Task<GameStartedEvent> startGameTask() {
+    return new Task<>() {
+      @Override
+      protected GameStartedEvent call() {
+        final GameStartedEvent gameStartedEvent = tetrisGameStartUseCase.start();
+        gameId = gameStartedEvent.gameId();
+        return gameStartedEvent;
+      }
+    };
   }
 
   @Override

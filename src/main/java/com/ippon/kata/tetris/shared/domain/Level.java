@@ -11,6 +11,6 @@ public record Level(int value) {
   }
 
   public Level next() {
-    return new Level(value + OFFSET);
+     return new Level(value + OFFSET);
   }
 }

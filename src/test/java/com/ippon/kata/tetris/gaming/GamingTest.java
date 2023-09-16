@@ -17,7 +17,7 @@ import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
 import com.ippon.kata.tetris.gaming.application.domain.Round;
 import com.ippon.kata.tetris.gaming.application.domain.Settings;
-import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStart;
+import com.ippon.kata.tetris.gaming.application.domain.TetrisGameStart;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.Level;

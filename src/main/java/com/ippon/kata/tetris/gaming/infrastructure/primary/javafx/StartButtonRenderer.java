@@ -7,16 +7,17 @@ import javafx.scene.paint.Color;
 
 public class StartButtonRenderer extends AbstractRenderer<Void> {
 
-  public static final String START_BUTTON_LABEL = "Démarrer";
+  public static final String START_BUTTON_LABEL = "Nouvelle Partie";
+  public static final double WIDTH = BLOCK_SIZE * 5;
 
   @Override
   public void render(GraphicsContext graphicsContext, Void event) {
     final double y = yStartButton();
 
-    graphicsContext.setFill(Color.LIGHTGRAY);
+    graphicsContext.setFill(Color.BLUE);
     graphicsContext.fillRoundRect(
         xStartButton(), y, widthStartButton(), heightStartButton(), 10, 10);
-    graphicsContext.setFill(Color.BLACK);
+    graphicsContext.setFill(Color.WHITE);
     graphicsContext.fillText(START_BUTTON_LABEL, xStartButton() + PADDING, y + 2 * PADDING);
   }
 
@@ -39,10 +40,10 @@ public class StartButtonRenderer extends AbstractRenderer<Void> {
   }
 
   private static double widthStartButton() {
-    return BLOCK_SIZE * 3.5;
+    return WIDTH;
   }
 
   private static int xStartButton() {
-    return xOrigin();
+    return xOrigin() - BLOCK_SIZE;
   }
 }

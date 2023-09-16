@@ -1,12 +1,8 @@
-package com.ippon.kata.tetris.gaming.application.usecase;
+package com.ippon.kata.tetris.gaming.application.domain;
 
 import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
 
-import com.ippon.kata.tetris.gaming.application.domain.Game;
-import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
-import com.ippon.kata.tetris.gaming.application.domain.Games;
-import com.ippon.kata.tetris.gaming.application.domain.Round;
-import com.ippon.kata.tetris.gaming.application.domain.Settings;
+import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
