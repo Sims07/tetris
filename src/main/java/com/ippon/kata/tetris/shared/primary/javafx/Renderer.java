@@ -14,4 +14,6 @@ public interface Renderer<E> {
   double PADDING = 20.0;
 
   void render(GraphicsContext graphicsContext, E event);
+
+  void erase(GraphicsContext graphicsContext);
 }

@@ -10,7 +10,9 @@ import com.ippon.kata.tetris.executing.infrastructure.primary.spring.TetrominoAP
 import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
 import com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.LevelRenderer;
+import com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.LostGameRenderer;
 import com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer;
+import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedEventDTO;
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundStartedEventDTO;
 import com.ippon.kata.tetris.preparing.infrastructure.primary.javafx.NextTetrominoRenderer;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
@@ -66,6 +68,7 @@ public class TetrominoGame extends Application {
   private final NextTetrominoRenderer nextTetrominoRenderer;
   private final StartButtonRenderer startButtonRenderer;
   private final Canvas canvas;
+  private final LostGameRenderer lostGameRenderer;
   private Thread startGameThread;
 
   public TetrominoGame() {
@@ -75,6 +78,7 @@ public class TetrominoGame extends Application {
     nextTetrominoRenderer = new NextTetrominoRenderer();
     startButtonRenderer = new StartButtonRenderer();
     canvas = new Canvas(HALF * WIDTH * BLOCK_SIZE, (double) HEIGHT * BLOCK_SIZE);
+    lostGameRenderer = new LostGameRenderer();
   }
 
   @Override
@@ -115,9 +119,7 @@ public class TetrominoGame extends Application {
   private void registerListeners(GraphicsContext graphicsContext) {
     applicationContext.addApplicationListener(
         (ApplicationListener<TetrominoMovedEventDTO>)
-            event ->
-                Platform.runLater(
-                    () -> renderBoard(graphicsContext, event)));
+            event -> Platform.runLater(() -> renderBoard(graphicsContext, event)));
     applicationContext.addApplicationListener(
         (ApplicationListener<ScoreUpdatedEventDTO>)
             event -> Platform.runLater(() -> scoreRenderer.render(graphicsContext, event)));
@@ -130,6 +132,9 @@ public class TetrominoGame extends Application {
     applicationContext.addApplicationListener(
         (ApplicationListener<TetrominoGeneratedEventDTO>)
             event -> Platform.runLater(() -> nextTetrominoRenderer.render(graphicsContext, event)));
+    applicationContext.addApplicationListener(
+        (ApplicationListener<GameStartedEventDTO>)
+            event -> Platform.runLater(() -> lostGameRenderer.erase(graphicsContext)));
   }
 
   private void renderErasedLines() {
@@ -175,10 +180,17 @@ public class TetrominoGame extends Application {
   }
 
   private void renderBoard(GraphicsContext graphicsContext, TetrominoMovedEventDTO event) {
-    if (gameId() != null && gameId().value().equals(event.gameId())) {
+    if (currentGameEvent(event)) {
       LOGGER.info("SHARED : receive tetromino moved {},{}", gameId(), event);
       renderBoard(graphicsContext);
+      if (event.outOfScope()) {
+        lostGameRenderer.render(graphicsContext, event);
+      }
     }
+  }
+
+  private boolean currentGameEvent(TetrominoMovedEventDTO event) {
+    return gameId() != null && gameId().value().equals(event.gameId());
   }
 
   private void renderBoard(GraphicsContext graphicsContext) {
