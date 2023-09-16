@@ -85,9 +85,11 @@ public class ExecutingGameStartedListener {
   }
 
   private void eraseCompletedLines(GameId gameId, int level) {
-    LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId), new Level(level));
+    LinesErasedEvent linesErasedEvent =
+        eraseLineUseCase.eraseCompletedLines(new BoardId(gameId), new Level(level));
     while (!linesErasedEvent.erasedLines().isEmpty()) {
-      linesErasedEvent = eraseLineUseCase.eraseCompletedLines(new BoardId(gameId), new Level(level));
+      linesErasedEvent =
+          eraseLineUseCase.eraseCompletedLines(new BoardId(gameId), new Level(level));
     }
   }
 
