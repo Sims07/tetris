@@ -1,0 +1,23 @@
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane
+  xmlns:fx="http://javafx.com/fxml"
+  xmlns="http://javafx.com/javafx"
+  fx:controller="com.ippon.kata.tetris.gaming.primary.javafx.controller.BoardController">
+  <HBox id="HBox" alignment="CENTER" spacing="5.0">
+    <Label text="Search Text:"/>
+    <TextField fx:id="searchField"/>
+    <Button fx:id="searchButton"/>
+  </HBox>
+
+  <VBox fx:id="dataContainer"
+    AnchorPane.leftAnchor="10.0"
+    AnchorPane.rightAnchor="10.0"
+    AnchorPane.topAnchor="50.0">
+  </VBox>
+
+</AnchorPane>
