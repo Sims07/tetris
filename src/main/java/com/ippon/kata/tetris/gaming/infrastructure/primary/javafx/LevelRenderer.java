@@ -1,6 +1,7 @@
 package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
 
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundStartedEventDTO;
+import com.ippon.kata.tetris.shared.primary.javafx.AbstractRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 public class LevelRenderer extends AbstractRenderer<NextRoundStartedEventDTO> {

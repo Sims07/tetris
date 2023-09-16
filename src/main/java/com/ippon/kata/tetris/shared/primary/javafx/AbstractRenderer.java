@@ -1,10 +1,10 @@
-package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
+package com.ippon.kata.tetris.shared.primary.javafx;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public abstract class AbstractRenderer<E> implements Renderer<E> {
-  static int xOrigin() {
+  protected static int xOrigin() {
     return boardWidth() + boardWidth() / 2 - BLOCK_SIZE;
   }
 
@@ -16,7 +16,7 @@ public abstract class AbstractRenderer<E> implements Renderer<E> {
     graphicsContext.setFill(Color.WHITE);
   }
 
-  static void renderTextAt(GraphicsContext graphicsContext, int x, double y, String text) {
+  protected static void renderTextAt(GraphicsContext graphicsContext, int x, double y, String text) {
     setDefaultFillColor(graphicsContext);
     graphicsContext.fillRect(x, y - TEXT_HEIGHT, TEXT_WIDTH, TEXT_HEIGHT);
     graphicsContext.setFill(Color.BLACK);

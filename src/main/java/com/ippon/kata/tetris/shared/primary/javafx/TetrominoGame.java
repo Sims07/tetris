@@ -1,15 +1,20 @@
-package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
+package com.ippon.kata.tetris.shared.primary.javafx;
 
 import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer.inXStartButtonRange;
 import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer.inYStartButtonRange;
 
 import com.ippon.kata.tetris.TetrisApplication;
+import com.ippon.kata.tetris.executing.infrastructure.primary.javafx.BoardRenderer;
 import com.ippon.kata.tetris.executing.infrastructure.primary.spring.BoardAPI;
 import com.ippon.kata.tetris.executing.infrastructure.primary.spring.TetrominoAPI;
 import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
+import com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.LevelRenderer;
+import com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer;
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundStartedEventDTO;
+import com.ippon.kata.tetris.preparing.infrastructure.primary.javafx.NextTetrominoRenderer;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
+import com.ippon.kata.tetris.scoring.infrastructure.primary.javafx.ScoreRenderer;
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;

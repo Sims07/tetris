@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
+package com.ippon.kata.tetris.shared.primary.javafx;
 
 import javafx.scene.canvas.GraphicsContext;
 

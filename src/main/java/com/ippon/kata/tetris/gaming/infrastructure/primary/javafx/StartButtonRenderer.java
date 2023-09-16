@@ -1,5 +1,6 @@
 package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
 
+import com.ippon.kata.tetris.shared.primary.javafx.AbstractRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;

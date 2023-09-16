@@ -1,6 +1,7 @@
-package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
+package com.ippon.kata.tetris.scoring.infrastructure.primary.javafx;
 
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
+import com.ippon.kata.tetris.shared.primary.javafx.AbstractRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 public class ScoreRenderer extends AbstractRenderer<ScoreUpdatedEventDTO> {

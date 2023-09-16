@@ -1,6 +1,7 @@
-package com.ippon.kata.tetris.gaming.infrastructure.primary.javafx;
+package com.ippon.kata.tetris.executing.infrastructure.primary.javafx;
 
 import com.ippon.kata.tetris.shared.domain.ShapeType;
+import com.ippon.kata.tetris.shared.primary.javafx.AbstractRenderer;
 import com.ippon.kata.tetris.shared.secondary.spring.model.BoardDTO;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
