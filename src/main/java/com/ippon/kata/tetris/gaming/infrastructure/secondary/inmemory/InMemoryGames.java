@@ -6,6 +6,7 @@ import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.UnaryOperator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,6 +27,12 @@ public class InMemoryGames implements Games {
     }
     return add(game);
   }
+
+  @Override
+  public Game update(GameId gameId, UnaryOperator<Game> updatedFonction) {
+    return gameStore.computeIfPresent(gameId, (gameIdToUpdate, gameToUpdate) -> updatedFonction.apply(gameToUpdate));
+  }
+
 
   @Override
   public Game get(GameId gameId) {

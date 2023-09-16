@@ -110,4 +110,16 @@ public record Game(
       throw new GameEndedException();
     }
   }
+
+  public Game initializeBoard() {
+    return new Game(
+        id(),
+        true,
+        tetrominoGenerated(),
+        currentRound(),
+        scoreInitialized(),
+        waitingTetromino(),
+        settings(),
+        false);
+  }
 }

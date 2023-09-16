@@ -1,6 +1,8 @@
 package com.ippon.kata.tetris.gaming.infrastructure.primary.spring;
 
 import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
@@ -28,35 +30,38 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameListenerTest {
 
-    @InjectMocks
-    GameListener gameListener;
-    @Mock
-    Games games;
-    @Mock
-    StartNextRoundUseCase nextRoundUseCase;
+  @InjectMocks GameListener gameListener;
+  @Mock Games games;
+  @Mock StartNextRoundUseCase nextRoundUseCase;
 
-    @Test
-    void givenAllInitialized_onApplicationEvent_shouldSetGameAsPlayingAndStartANewRound() {
-        final UUID gameIdValue = UUID.randomUUID();
-        final GameId gameId = new GameId(gameIdValue);
-        given(games.get(gameId)).willReturn(new Game(gameId, false, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1)), false));
-        final Game game = new Game(gameId, true, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1)), false);
-        given(games.add(game)).willReturn(game);
+  @Test
+  void givenAllInitialized_onApplicationEvent_shouldSetGameAsPlayingAndStartANewRound() {
+    final UUID gameIdValue = UUID.randomUUID();
+    final GameId gameId = new GameId(gameIdValue);
+    final Game game =
+        new Game(
+            gameId,
+            true,
+            true,
+            new Round(IDLE, 0),
+            true,
+            new Tetromino(ShapeType.S),
+            new Settings(new Level(1)),
+            false);
+    given(games.update(eq(game.id()), any())).willReturn(game);
 
-        gameListener.onApplicationEvent(new BoardInitializedEventDTO(
-            this,
-            gameIdValue
-        ));
+    gameListener.onApplicationEvent(new BoardInitializedEventDTO(this, gameIdValue));
 
-        then(nextRoundUseCase).should().start(gameId, ShapeType.S);
-    }
+    then(nextRoundUseCase).should().start(gameId, ShapeType.S);
+  }
 
-    @Test
-    void givenOutOfScope_onTetrominoMovedEvent_shouldEmitLostGameEvent() {
-        final UUID gameIdValue = UUID.randomUUID();
-        final GameId gameId = new GameId(gameIdValue);
+  @Test
+  void givenOutOfScope_onTetrominoMovedEvent_shouldEmitLostGameEvent() {
+    final UUID gameIdValue = UUID.randomUUID();
+    final GameId gameId = new GameId(gameIdValue);
 
-        gameListener.onApplicationEvent(new TetrominoMovedEventDTO(
+    gameListener.onApplicationEvent(
+        new TetrominoMovedEventDTO(
             this,
             UUID.randomUUID(),
             ShapeType.L,
@@ -64,9 +69,7 @@ class GameListenerTest {
             true,
             true,
             Collections.emptyList()));
-        
-        then(nextRoundUseCase).should(never()).start(gameId, ShapeType.S);
-    }
-    
-    
+
+    then(nextRoundUseCase).should(never()).start(gameId, ShapeType.S);
+  }
 }

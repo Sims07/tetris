@@ -30,38 +30,28 @@ public class GameListener {
   @Async
   @EventListener
   public void onApplicationEvent(BoardInitializedEventDTO event) {
-    final Game game = games.get(new GameId(event.getGameId()));
-    final Game gameSaved =
-        games.add(
-            new Game(
-                game.id(),
-                true,
-                game.tetrominoGenerated(),
-                game.currentRound(),
-                game.scoreInitialized(),
-                game.waitingTetromino(),
-                game.settings(),
-                false));
-    LOGGER.info("GAMING : receive board initialized {}", gameSaved);
-    startNextRound(gameSaved);
+    Game savedGame =
+        games.update(new GameId(event.getGameId()), Game::initializeBoard);
+    LOGGER.info("GAMING : receive board initialized {}", savedGame);
+    startNextRound(savedGame);
   }
 
   @Async
   @EventListener
   public void onApplicationEvent(TetrominoGeneratedEventDTO event) {
-    final Game game = games.get(new GameId(event.getGameId()));
-    final Game saved = games.add(game.tetrominoGenerated(ShapeType.valueOf(event.getShape())));
-    LOGGER.info("GAMING : receive tetromino generated  {}", saved);
-    startNextRound(saved);
+    Game savedGame =
+        games.update(new GameId(event.getGameId()), game -> game.tetrominoGenerated(ShapeType.valueOf(event.getShape())));
+    LOGGER.info("GAMING : receive tetromino generated  {}", savedGame);
+    startNextRound(savedGame);
   }
 
   @Async
   @EventListener
   public void onApplicationEvent(ScoreUpdatedEventDTO event) {
-    final Game game = games.get(new GameId(event.getGameId()));
-    final Game saved = games.add(game.initializeScore());
-    LOGGER.info("GAMING : receive score initialized {}", saved);
-    startNextRound(saved);
+    Game savedGame =
+        games.update(new GameId(event.getGameId()), Game::initializeScore);
+    LOGGER.info("GAMING : receive score initialized {}", savedGame);
+    startNextRound(savedGame);
   }
 
   @Async
