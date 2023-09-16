@@ -29,7 +29,7 @@ class PreparingGameStartedListenerTest {
     preparingGameStartedListener.onApplicationEvent(
         new LinesErasedEventDTO(this, List.of(21), gameId, 1));
 
-    then(updateScoreUseCase).should().erasedLines(new GameId(gameId), 1);
+    then(updateScoreUseCase).should().erasedLines(new GameId(gameId), 1, 1);
     then(eventPublisher).should().publish(any());
   }
 }

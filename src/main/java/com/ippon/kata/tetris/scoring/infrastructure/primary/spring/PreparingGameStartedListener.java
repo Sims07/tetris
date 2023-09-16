@@ -42,6 +42,6 @@ public class PreparingGameStartedListener {
   public void onApplicationEvent(LinesErasedEventDTO event) {
     LOGGER.info("SCORING : Receive lines erased to {}", event.gameId());
     eventPublisher.publish(
-        updateScoreUseCase.erasedLines(new GameId(event.gameId()), event.erasedLines().size()));
+        updateScoreUseCase.erasedLines(new GameId(event.gameId()), event.erasedLines().size(), event.level()));
   }
 }

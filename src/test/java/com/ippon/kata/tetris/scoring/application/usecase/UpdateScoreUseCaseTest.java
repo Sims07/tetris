@@ -1,7 +1,5 @@
 package com.ippon.kata.tetris.scoring.application.usecase;
 
-import static org.assertj.core.api.BDDAssertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
@@ -30,17 +28,23 @@ class UpdateScoreUseCaseTest {
   }
 
   enum ExpectedScore {
-    SINGLE(1, 100),
-    DOUBLE(2, 300),
-    TRIPLE(3, 500),
-    TETRIS(4, 800);
+    SINGLE(1, 100, 1),
+    DOUBLE(2, 300, 1),
+    TRIPLE(3, 500, 1),
+    TETRIS(4, 800, 1),
+    SINGLE_LEVEL5(1, 500, 5),
+    DOUBLE_LEVEL5(2, 1500, 5),
+    TRIPLE_LEVEL5(3, 2500, 5),
+    TETRIS_LEVEL5(4, 4000, 5);
 
     private final int expectedScore;
     private final int nbLineErased;
+    private final int level;
 
-    ExpectedScore(int nbLineErased, int expectedScore) {
+    ExpectedScore(int nbLineErased, int expectedScore, int level) {
       this.nbLineErased = nbLineErased;
       this.expectedScore = expectedScore;
+      this.level = level;
     }
   }
 
@@ -51,7 +55,7 @@ class UpdateScoreUseCaseTest {
     given(scores.get(any())).willReturn(new Score(gameId, 0));
     given(scores.save(any())).willAnswer(a -> a.getArguments()[0]);
 
-    final ScoreUpdatedEvent scoreUpdatedEvent = updateScoreUseCase.erasedLines(gameId, expectedScore.nbLineErased);
+    final ScoreUpdatedEvent scoreUpdatedEvent = updateScoreUseCase.erasedLines(gameId, expectedScore.nbLineErased, expectedScore.level);
 
     BDDAssertions.then(scoreUpdatedEvent).isNotNull();
     BDDAssertions.then(scoreUpdatedEvent.score()).isNotNull();
