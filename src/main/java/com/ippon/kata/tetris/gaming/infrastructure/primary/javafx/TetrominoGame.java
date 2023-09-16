@@ -23,6 +23,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -42,13 +43,13 @@ public class TetrominoGame extends Application {
   public static final int TETROMINO_BLOC_SIZE = 4;
   public static final int PADDING = 20;
   public static final int FONT_SIZE = 25;
+  private static final URL LINE_ERASED_SOUND_MP3 = TetrominoGame.class.getResource("/sounds/erased_line.mp3");
   private ConfigurableApplicationContext applicationContext;
   private BoardAPI boardAPI;
   private TetrominoAPI tetrominoAPI;
   private GameId gameId;
   private TetrisGameStartUseCase tetrisGameStartUseCase;
-  private Media media;
-
+  private MediaPlayer mediaPlayer;
   @Override
   public void init() {
     applicationContext = new SpringApplicationBuilder(TetrisApplication.class).run();
@@ -65,16 +66,21 @@ public class TetrominoGame extends Application {
     
     startGame(tetrisGameStartUseCase);
     renderBoard(graphicsContext);
+    initMediaPLayers();
     playTetrisThemeMusic();
 
     primaryStage.show();
   }
 
-  private void playTetrisThemeMusic() throws URISyntaxException {
-    media = new Media(TETRIS_MP3.toURI().toString());
-    MediaPlayer mediaPlayer = new MediaPlayer(media);
+  private void initMediaPLayers() throws URISyntaxException {
+    Media mediaMusicGame = new Media(TETRIS_MP3.toURI().toString());
+    mediaPlayer = new MediaPlayer(mediaMusicGame);
     mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
     mediaPlayer.setAutoPlay(true);
+  }
+
+  private void playTetrisThemeMusic() {
+    mediaPlayer.play();
   }
 
   private void registerListeners(GraphicsContext graphicsContext) {
@@ -86,7 +92,7 @@ public class TetrominoGame extends Application {
             event -> Platform.runLater(() -> renderScore(graphicsContext, event)));
     applicationContext.addApplicationListener(
         (ApplicationListener<LinesErasedEventDTO>)
-            event -> Platform.runLater(() -> renderErasedLines(graphicsContext, event)));
+            event -> Platform.runLater(() -> renderErasedLines(event)));
     applicationContext.addApplicationListener(
         (ApplicationListener<TetrominoGeneratedEventDTO>)
             event -> Platform.runLater(() -> renderNextTetromino(graphicsContext, event)));
@@ -130,7 +136,15 @@ public class TetrominoGame extends Application {
     return new Shape(ShapeType.valueOf(shape));
   }
 
-  private void renderErasedLines(GraphicsContext gc, LinesErasedEventDTO event) {}
+  private void renderErasedLines(LinesErasedEventDTO event)  {
+    final AudioClip audioClip;
+    try {
+      audioClip = new AudioClip(LINE_ERASED_SOUND_MP3.toURI().toString());
+      audioClip.play();
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private void renderScore(GraphicsContext graphicsContext, ScoreUpdatedEventDTO event) {
     graphicsContext.setFill(Color.WHITE);
