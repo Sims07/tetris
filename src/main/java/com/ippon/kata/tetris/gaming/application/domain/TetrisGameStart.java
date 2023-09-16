@@ -5,7 +5,7 @@ import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.Level;
-import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
+import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,8 @@ public class TetrisGameStart implements TetrisGameStartUseCase {
                 new Round(IDLE, 0),
                 false,
                 null,
-                new Settings(new Level(1)), false));
+                new Settings(new Level(1)),
+                false));
     LOGGER.info("GAMING : Game started ({})", startedGame.id());
     return eventPublisher.publish(new GameStartedEvent(startedGame.id(), STARTED_LEVEL));
   }

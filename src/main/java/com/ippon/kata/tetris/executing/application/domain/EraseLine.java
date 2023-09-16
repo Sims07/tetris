@@ -2,7 +2,7 @@ package com.ippon.kata.tetris.executing.application.domain;
 
 import com.ippon.kata.tetris.executing.application.usecase.EraseLineUseCase;
 import com.ippon.kata.tetris.shared.domain.Level;
-import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
+import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import java.util.List;
 
 public class EraseLine implements EraseLineUseCase {
@@ -24,7 +24,8 @@ public class EraseLine implements EraseLineUseCase {
     } else {
       boardWithoutCompleteLines = boardWithoutCompleteLines.eraseLines(lineToErase);
       boards.save(boardWithoutCompleteLines);
-      return linesErasedEventEventPublisher.publish(new LinesErasedEvent(lineToErase, boardId.gameId(), level));
+      return linesErasedEventEventPublisher.publish(
+          new LinesErasedEvent(lineToErase, boardId.gameId(), level));
     }
   }
 }

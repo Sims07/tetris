@@ -7,8 +7,8 @@ import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedE
 import com.ippon.kata.tetris.scoring.application.domain.Score;
 import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
+import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import com.ippon.kata.tetris.shared.domain.GameId;
-import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

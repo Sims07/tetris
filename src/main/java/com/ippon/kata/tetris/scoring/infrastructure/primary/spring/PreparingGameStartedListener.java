@@ -5,7 +5,7 @@ import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
 import com.ippon.kata.tetris.scoring.application.usecase.UpdateScoreUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
-import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
+import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +42,7 @@ public class PreparingGameStartedListener {
   public void onApplicationEvent(LinesErasedEventDTO event) {
     LOGGER.info("SCORING : Receive lines erased to {}", event.gameId());
     eventPublisher.publish(
-        updateScoreUseCase.erasedLines(new GameId(event.gameId()), event.erasedLines().size(), event.level()));
+        updateScoreUseCase.erasedLines(
+            new GameId(event.gameId()), event.erasedLines().size(), event.level()));
   }
 }

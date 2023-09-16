@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.scoring.infrastructure.secondary.spring;
 
 import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
-import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
+import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 

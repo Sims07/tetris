@@ -5,8 +5,8 @@ import static org.mockito.BDDMockito.then;
 
 import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.UpdateScoreUseCase;
+import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import com.ippon.kata.tetris.shared.domain.GameId;
-import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
 import java.util.List;
 import java.util.UUID;
