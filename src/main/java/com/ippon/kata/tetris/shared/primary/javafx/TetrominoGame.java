@@ -175,7 +175,8 @@ public class TetrominoGame extends Application {
     while (!tetrominoAPI
         .move(gameId(), Direction.DOWN)
         .map(tetromino -> tetromino.tetromino().status() == TetraminoStatus.FIXED)
-        .orElse(true)) ;
+        .orElse(true))
+      ;
   }
 
   private GameId gameId() {
@@ -192,10 +193,14 @@ public class TetrominoGame extends Application {
     if (currentGameEvent(event)) {
       LOGGER.info("SHARED : receive tetromino moved {},{}", gameId(), event);
       renderBoard(graphicsContext);
-      if (event.outOfScope()) {
+      if (gameLost(event)) {
         lostGameRenderer.render(graphicsContext, event);
       }
     }
+  }
+
+  private static boolean gameLost(TetrominoMovedEventDTO event) {
+    return event.outOfScope();
   }
 
   private boolean currentGameEvent(TetrominoMovedEventDTO event) {
