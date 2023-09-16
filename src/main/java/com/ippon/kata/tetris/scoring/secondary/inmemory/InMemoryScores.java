@@ -1,0 +1,25 @@
+package com.ippon.kata.tetris.scoring.secondary.inmemory;
+
+import com.ippon.kata.tetris.scoring.domain.Score;
+import com.ippon.kata.tetris.scoring.domain.Scores;
+import com.ippon.kata.tetris.shared.GameId;
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.stereotype.Component;
+
+@Component
+public class InMemoryScores implements Scores {
+
+    private final Map<GameId, Score> scores = new HashMap<>();
+
+    @Override
+    public Score save(Score score) {
+        scores.put(score.gameId(), score);
+        return score;
+    }
+
+    @Override
+    public Score get(GameId gameId) {
+        return scores.get(gameId);
+    }
+}
