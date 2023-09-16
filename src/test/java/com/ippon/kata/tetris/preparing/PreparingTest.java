@@ -2,9 +2,9 @@ package com.ippon.kata.tetris.preparing;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import com.ippon.kata.tetris.preparing.domain.Tetromino;
-import com.ippon.kata.tetris.preparing.domain.TetrominoGeneratedEvent;
-import com.ippon.kata.tetris.preparing.domain.TetrominoGenerator;
+import com.ippon.kata.tetris.preparing.application.domain.Tetromino;
+import com.ippon.kata.tetris.preparing.application.domain.TetrominoGeneratedEvent;
+import com.ippon.kata.tetris.preparing.application.domain.TetrominoGenerator;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.Optional;
 import java.util.UUID;

@@ -1,15 +1,16 @@
 package com.ippon.kata.tetris.gaming.primary.spring;
 
-import static com.ippon.kata.tetris.gaming.domain.RoundStatus.IDLE;
+import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 
-import com.ippon.kata.tetris.gaming.Games;
-import com.ippon.kata.tetris.gaming.domain.Game;
-import com.ippon.kata.tetris.gaming.domain.Round;
-import com.ippon.kata.tetris.gaming.domain.Tetromino;
-import com.ippon.kata.tetris.gaming.usecase.StartNextRoundUseCase;
+import com.ippon.kata.tetris.gaming.application.domain.Game;
+import com.ippon.kata.tetris.gaming.application.domain.Games;
+import com.ippon.kata.tetris.gaming.application.domain.Round;
+import com.ippon.kata.tetris.gaming.application.domain.Tetromino;
+import com.ippon.kata.tetris.gaming.application.usecase.StartNextRoundUseCase;
+import com.ippon.kata.tetris.gaming.infrastructure.primary.spring.GameListener;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;

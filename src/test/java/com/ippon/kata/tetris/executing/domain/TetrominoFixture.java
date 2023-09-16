@@ -1,5 +1,9 @@
 package com.ippon.kata.tetris.executing.domain;
 
+import com.ippon.kata.tetris.executing.application.domain.Shape;
+import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
+import com.ippon.kata.tetris.executing.application.domain.Tetromino;
+import com.ippon.kata.tetris.executing.application.domain.TetrominoId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import java.util.UUID;
 

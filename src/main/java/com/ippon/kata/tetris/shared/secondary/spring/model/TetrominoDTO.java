@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.shared.secondary.spring.model;
 
-import com.ippon.kata.tetris.executing.domain.TetraminoStatus;
-import com.ippon.kata.tetris.executing.domain.Tetromino;
+import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
+import com.ippon.kata.tetris.executing.application.domain.Tetromino;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import java.util.List;
 

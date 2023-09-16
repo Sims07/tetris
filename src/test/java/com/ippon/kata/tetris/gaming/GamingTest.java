@@ -1,21 +1,23 @@
 package com.ippon.kata.tetris.gaming;
 
-import static com.ippon.kata.tetris.gaming.domain.RoundStatus.IDLE;
+import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.ippon.kata.tetris.executing.domain.PickTetromino;
-import com.ippon.kata.tetris.executing.domain.Shape;
-import com.ippon.kata.tetris.executing.domain.TetraminoStatus;
-import com.ippon.kata.tetris.executing.domain.Tetromino;
-import com.ippon.kata.tetris.executing.domain.TetrominoId;
-import com.ippon.kata.tetris.executing.domain.TetrominoPickedEvent;
-import com.ippon.kata.tetris.executing.usecase.PickTetrominoUseCase;
-import com.ippon.kata.tetris.gaming.domain.Game;
-import com.ippon.kata.tetris.gaming.domain.GameStartedEvent;
-import com.ippon.kata.tetris.gaming.domain.Round;
-import com.ippon.kata.tetris.gaming.usecase.TetrisGameStartUseCase;
+import com.ippon.kata.tetris.executing.application.domain.PickTetromino;
+import com.ippon.kata.tetris.executing.application.domain.Shape;
+import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
+import com.ippon.kata.tetris.executing.application.domain.Tetromino;
+import com.ippon.kata.tetris.executing.application.domain.TetrominoId;
+import com.ippon.kata.tetris.executing.application.domain.TetrominoPickedEvent;
+import com.ippon.kata.tetris.executing.application.usecase.PickTetrominoUseCase;
+import com.ippon.kata.tetris.gaming.application.domain.Game;
+import com.ippon.kata.tetris.gaming.application.domain.GameStartedEvent;
+import com.ippon.kata.tetris.gaming.application.domain.Games;
+import com.ippon.kata.tetris.gaming.application.domain.Round;
+import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStart;
+import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;

@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris.shared.secondary.spring.model;
 
-import com.ippon.kata.tetris.executing.domain.TetrominoPickedEvent;
+import com.ippon.kata.tetris.executing.application.domain.TetrominoPickedEvent;
 import java.util.UUID;
 import org.springframework.context.ApplicationEvent;
 

@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris.shared.secondary.spring.model;
 
-import com.ippon.kata.tetris.executing.domain.Board;
+import com.ippon.kata.tetris.executing.application.domain.Board;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;

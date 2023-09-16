@@ -3,6 +3,14 @@ package com.ippon.kata.tetris.executing.domain;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 
+import com.ippon.kata.tetris.executing.application.domain.Board;
+import com.ippon.kata.tetris.executing.application.domain.BoardId;
+import com.ippon.kata.tetris.executing.application.domain.Position;
+import com.ippon.kata.tetris.executing.application.domain.Shape;
+import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
+import com.ippon.kata.tetris.executing.application.domain.Tetromino;
+import com.ippon.kata.tetris.executing.application.domain.TetrominoFixedException;
+import com.ippon.kata.tetris.executing.application.domain.TetrominoId;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;

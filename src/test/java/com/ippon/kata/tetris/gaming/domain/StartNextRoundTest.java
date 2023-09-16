@@ -1,11 +1,15 @@
 package com.ippon.kata.tetris.gaming.domain;
 
-import static com.ippon.kata.tetris.gaming.domain.RoundStatus.IDLE;
-import static com.ippon.kata.tetris.gaming.domain.RoundStatus.STARTED;
+import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
+import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.STARTED;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.BDDMockito.given;
 
-import com.ippon.kata.tetris.gaming.Games;
+import com.ippon.kata.tetris.gaming.application.domain.Game;
+import com.ippon.kata.tetris.gaming.application.domain.Games;
+import com.ippon.kata.tetris.gaming.application.domain.NextRoundStartedEvent;
+import com.ippon.kata.tetris.gaming.application.domain.Round;
+import com.ippon.kata.tetris.gaming.application.domain.StartNextRound;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;

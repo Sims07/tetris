@@ -2,10 +2,10 @@ package com.ippon.kata.tetris.preparing;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
-import com.ippon.kata.tetris.preparing.domain.GenerateNextTetromino;
-import com.ippon.kata.tetris.preparing.domain.GenerateNextTetrominoUseCase;
-import com.ippon.kata.tetris.preparing.domain.TetrominoGeneratedEvent;
-import com.ippon.kata.tetris.preparing.secondary.spring.TetrominoGeneratedPublisher;
+import com.ippon.kata.tetris.preparing.application.domain.GenerateNextTetromino;
+import com.ippon.kata.tetris.preparing.application.domain.TetrominoGeneratedEvent;
+import com.ippon.kata.tetris.preparing.application.usecase.GenerateNextTetrominoUseCase;
+import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedPublisher;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

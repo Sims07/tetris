@@ -3,9 +3,10 @@ package com.ippon.kata.tetris.executing.usecase;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 
-import com.ippon.kata.tetris.executing.domain.BoardInitializedEvent;
-import com.ippon.kata.tetris.executing.domain.Boards;
-import com.ippon.kata.tetris.executing.domain.InitializeBoard;
+import com.ippon.kata.tetris.executing.application.domain.BoardInitializedEvent;
+import com.ippon.kata.tetris.executing.application.domain.Boards;
+import com.ippon.kata.tetris.executing.application.domain.InitializeBoard;
+import com.ippon.kata.tetris.executing.application.usecase.InitializeBoardUseCase;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;

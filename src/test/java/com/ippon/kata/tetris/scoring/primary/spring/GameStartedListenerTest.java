@@ -3,10 +3,11 @@ package com.ippon.kata.tetris.scoring.primary.spring;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.ippon.kata.tetris.gaming.secondary.spring.GameStartedEventDTO;
-import com.ippon.kata.tetris.scoring.domain.Score;
-import com.ippon.kata.tetris.scoring.domain.ScoreInitializedEvent;
-import com.ippon.kata.tetris.scoring.usecase.InitializeScoreUseCase;
+import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedEventDTO;
+import com.ippon.kata.tetris.scoring.application.domain.Score;
+import com.ippon.kata.tetris.scoring.application.domain.ScoreInitializedEvent;
+import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
+import com.ippon.kata.tetris.scoring.infrastructure.primary.spring.PreparingGameStartedListener;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
