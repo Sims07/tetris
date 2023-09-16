@@ -15,19 +15,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameStartedListenerTest {
 
-    @InjectMocks
-    GameStartedListener gameStartedListener;
+  public static final int LEVEL = 1;
+  @InjectMocks GameStartedListener gameStartedListener;
 
-    @Mock
-    GenerateNextTetromino generateNextTetromino;
+  @Mock GenerateNextTetromino generateNextTetromino;
 
-    @Test
-    void givenGameStarted_onApplicationEvent_shouldGenerateTetromino() {
-        final UUID gameId = UUID.randomUUID();
-        gameStartedListener.onApplicationEvent(new GameStartedEventDTO(
-            this, gameId
-        ));
+  @Test
+  void givenGameStarted_onApplicationEvent_shouldGenerateTetromino() {
+    final UUID gameId = UUID.randomUUID();
 
-        BDDMockito.then(generateNextTetromino).should().generateNextTetromino(new GameId(gameId));
-    }
+    gameStartedListener.onApplicationEvent(new GameStartedEventDTO(this, gameId, LEVEL));
+
+    BDDMockito.then(generateNextTetromino).should().generateNextTetromino(new GameId(gameId));
+  }
 }

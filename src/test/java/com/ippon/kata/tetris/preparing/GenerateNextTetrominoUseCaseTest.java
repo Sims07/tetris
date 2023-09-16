@@ -1,6 +1,9 @@
 package com.ippon.kata.tetris.preparing;
 
+
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 
 import com.ippon.kata.tetris.preparing.application.domain.GenerateNextTetromino;
 import com.ippon.kata.tetris.preparing.application.domain.TetrominoGeneratedEvent;
@@ -17,18 +20,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GenerateNextTetrominoUseCaseTest {
 
-    @Mock
-    TetrominoGeneratedPublisher eventPublisher;
+  @Mock TetrominoGeneratedPublisher eventPublisher;
 
-    @Test
-    void generateNextTetromino_shouldSaveAndPublishEvent() {
-        GenerateNextTetrominoUseCase generateNextTetrominoUseCase = new GenerateNextTetromino(eventPublisher);
+  @Test
+  void generateNextTetromino_shouldPublishEvent() {
+    GenerateNextTetrominoUseCase generateNextTetrominoUseCase =
+        new GenerateNextTetromino(eventPublisher);
+    BDDMockito.given(eventPublisher.publish(any())).willReturn(mock(TetrominoGeneratedEvent.class));
 
-        final TetrominoGeneratedEvent tetrominoGeneratedEvent = generateNextTetrominoUseCase.generateNextTetromino(
-            new GameId(UUID.randomUUID())
-        );
+    final TetrominoGeneratedEvent tetrominoGeneratedEvent =
+        generateNextTetrominoUseCase.generateNextTetromino(new GameId(UUID.randomUUID()));
 
-        then(tetrominoGeneratedEvent).isNotNull();
-        BDDMockito.then(eventPublisher).should().publish(tetrominoGeneratedEvent);
-    }
+    then(tetrominoGeneratedEvent).isNotNull();
+  }
 }

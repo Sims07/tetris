@@ -12,9 +12,6 @@ public class InMemoryGames implements Games {
 
     private final Map<GameId, Game> gameStore = new HashMap<>();
 
-    public InMemoryGames() {
-    }
-
     @Override
     public synchronized Game save(Game game) {
         gameStore.put(game.id(), game);

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 public class StartNextRound implements StartNextRoundUseCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartNextRound.class);
+    public static final Level INITIAL_LEVEL = new Level(1);
     private final Games games;
     private final EventPublisher<NextRoundStartedEvent> eventPublisher;
 
@@ -21,14 +22,8 @@ public class StartNextRound implements StartNextRoundUseCase {
     @Override
     public NextRoundStartedEvent start(GameId gameId, ShapeType shapeType) {
         final Game game = games.get(gameId);
-        final Game saved = games.save(new Game(
-            game.id(),
-            game.boardInitialized(),
-            game.tetrominoGenerated(),
-            new Round(RoundStatus.STARTED, game.currentRound().index() + 1),
-            game.scoreInitialized(),
-            null));
+        final Game saved = games.save(game.newRound());
         LOGGER.info("GAMING : Start new round {}", saved);
-        return eventPublisher.publish(new NextRoundStartedEvent(gameId, shapeType, saved.currentRound().index()));
+        return eventPublisher.publish(new NextRoundStartedEvent(gameId, shapeType, saved.currentRound().index(), saved.settings().level()));
     }
 }

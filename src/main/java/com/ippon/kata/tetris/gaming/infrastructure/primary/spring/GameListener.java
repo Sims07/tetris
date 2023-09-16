@@ -3,7 +3,9 @@ package com.ippon.kata.tetris.gaming.infrastructure.primary.spring;
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.GameStatus;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
+import com.ippon.kata.tetris.gaming.application.domain.Level;
 import com.ippon.kata.tetris.gaming.application.domain.RoundStatus;
+import com.ippon.kata.tetris.gaming.application.domain.Settings;
 import com.ippon.kata.tetris.gaming.application.domain.Tetromino;
 import com.ippon.kata.tetris.gaming.application.usecase.StartNextRoundUseCase;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
@@ -41,8 +43,8 @@ public class GameListener {
                 game.tetrominoGenerated(),
                 game.currentRound(),
                 game.scoreInitialized(),
-                game.waitingTetromino()
-            )
+                game.waitingTetromino(),
+                new Settings(new Level(1)))
         );
         LOGGER.info("GAMING : receive board initialized {}", gameSaved);
         startNextRound(gameSaved);
@@ -59,8 +61,8 @@ public class GameListener {
                 true,
                 game.currentRound(),
                 game.scoreInitialized(),
-                new Tetromino(ShapeType.valueOf(event.getShape()))
-            )
+                new Tetromino(ShapeType.valueOf(event.getShape())),
+                new Settings(new Level(1)))
         );
         LOGGER.info("GAMING : receive tetromino generated  {}", saved);
         startNextRound(saved);
@@ -77,7 +79,7 @@ public class GameListener {
                 game.tetrominoGenerated(),
                 game.currentRound(),
                 true,
-                game.waitingTetromino())
+                game.waitingTetromino(), new Settings(new Level(1)))
         );
         LOGGER.info("GAMING : receive score initialized {}", saved);
         startNextRound(saved);
@@ -97,10 +99,14 @@ public class GameListener {
     }
 
     private void startNextRound(Game gameSaved) {
-        if (gameSaved.status() == GameStatus.PLAYING
-            && gameSaved.currentRound().status() != RoundStatus.STARTED
-            && gameSaved.waitingTetromino() != null) {
+        if (nextRoundAvailable(gameSaved)) {
             nextRoundUseCase.start(gameSaved.id(), gameSaved.waitingTetromino().shape());
         }
+    }
+
+    private static boolean nextRoundAvailable(Game gameSaved) {
+        return gameSaved.status() == GameStatus.PLAYING
+            && gameSaved.currentRound().status() != RoundStatus.STARTED
+            && gameSaved.waitingTetromino() != null;
     }
 }

@@ -7,7 +7,9 @@ import static org.mockito.Mockito.never;
 
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
+import com.ippon.kata.tetris.gaming.application.domain.Level;
 import com.ippon.kata.tetris.gaming.application.domain.Round;
+import com.ippon.kata.tetris.gaming.application.domain.Settings;
 import com.ippon.kata.tetris.gaming.application.domain.Tetromino;
 import com.ippon.kata.tetris.gaming.application.usecase.StartNextRoundUseCase;
 import com.ippon.kata.tetris.gaming.infrastructure.primary.spring.GameListener;
@@ -38,8 +40,8 @@ class GameListenerTest {
     void givenAllInitialized_onApplicationEvent_shouldSetGameAsPlayingAndStartANewRound() {
         final UUID gameIdValue = UUID.randomUUID();
         final GameId gameId = new GameId(gameIdValue);
-        given(games.get(gameId)).willReturn(new Game(gameId, false, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S)));
-        final Game game = new Game(gameId, true, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S));
+        given(games.get(gameId)).willReturn(new Game(gameId, false, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1))));
+        final Game game = new Game(gameId, true, true, new Round(IDLE, 0), true, new Tetromino(ShapeType.S), new Settings(new Level(1)));
         given(games.save(game)).willReturn(game);
 
         gameListener.onApplicationEvent(new BoardInitializedEventDTO(
@@ -66,4 +68,6 @@ class GameListenerTest {
         
         then(nextRoundUseCase).should(never()).start(gameId, ShapeType.S);
     }
+    
+    
 }

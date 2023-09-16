@@ -56,7 +56,7 @@ class MoveTetrominoUseCaseTest {
 
   @ParameterizedTest
   @EnumSource(Direction.class)
-  void givenFallingTetrominoWithNextSlotAvailable_move_shouldMoveTetromino(Direction direction) {
+  void givenFallingITetrominoWithNextSlotAvailable_move_shouldMoveTetromino(Direction direction) {
     final GameId gameId = new GameId(UUID.randomUUID());
     final BoardId boardId = new BoardId(gameId);
     final Board board = new Board(boardId);
@@ -77,24 +77,24 @@ class MoveTetrominoUseCaseTest {
         switch (direction) {
             case DOWN -> then(tetromino.positions())
                 .isEqualTo(
-                    List.of(new Position(5, 1)
-                        , new Position(5, 2)
-                        , new Position(5, 3)
-                        , new Position(5, 4))
+                    List.of(new Position(3, 1)
+                        , new Position(4, 1)
+                        , new Position(5, 1)
+                        , new Position(6, 1))
                 );
             case LEFT -> then(tetromino.positions())
                 .isEqualTo(
-                    List.of(new Position(4, 0)
-                        , new Position(4, 1)
-                        , new Position(4, 2)
-                        , new Position(4, 3))
+                    List.of(new Position(2, 0)
+                        , new Position(3, 0)
+                        , new Position(4, 0)
+                        , new Position(5, 0))
                 );
             case RIGHT -> then(tetromino.positions())
                 .isEqualTo(
-                    List.of(new Position(6, 0)
-                        , new Position(6, 1)
-                        , new Position(6, 2)
-                        , new Position(6, 3))
+                    List.of(new Position(4, 0)
+                        , new Position(5, 0)
+                        , new Position(6, 0)
+                        , new Position(7, 0))
                 );
         }
     }

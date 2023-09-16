@@ -1,12 +1,14 @@
 package com.ippon.kata.tetris.gaming.domain;
 
-import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
+import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.STARTED;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.GameStatus;
+import com.ippon.kata.tetris.gaming.application.domain.Level;
 import com.ippon.kata.tetris.gaming.application.domain.Round;
 import com.ippon.kata.tetris.gaming.application.domain.RoundStatus;
+import com.ippon.kata.tetris.gaming.application.domain.Settings;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class GameTest {
 
     private static Game game(boolean boardInitialized, boolean boardInitialized1) {
-        return new Game(new GameId(UUID.randomUUID()), boardInitialized, boardInitialized1, new Round(RoundStatus.STARTED, 0), boardInitialized1, null);
+        return new Game(new GameId(UUID.randomUUID()), boardInitialized, boardInitialized1, new Round(RoundStatus.STARTED, 0), boardInitialized1, null, new Settings(new Level(1)));
     }
 
     @Test
@@ -44,6 +46,6 @@ class GameTest {
 
         final Game game1 = game.newRound();
 
-        then(game1.currentRound().status()).isEqualTo(IDLE);
+        then(game1.currentRound().status()).isEqualTo(STARTED);
     }
 }

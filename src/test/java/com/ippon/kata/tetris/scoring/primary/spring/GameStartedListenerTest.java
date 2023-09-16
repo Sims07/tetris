@@ -9,6 +9,7 @@ import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
 import com.ippon.kata.tetris.scoring.infrastructure.primary.spring.PreparingGameStartedListener;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,12 +20,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameStartedListenerTest {
 
-    public static final int SPEED_MS = 100;
+    public static final int LEVEL = 1;
     @InjectMocks
     PreparingGameStartedListener gameStartedListener;
     @Mock
     InitializeScoreUseCase initializeScore;
-
+    @Mock
+    EventPublisher<ScoreUpdatedEvent> eventPublisher;
     @Test
     void givenGameStarted_onApplicationEvent_initializeScore() {
         final UUID gameId = UUID.randomUUID();
@@ -35,7 +37,7 @@ class GameStartedListenerTest {
             )
         ));
 
-        gameStartedListener.onApplicationEvent(new GameStartedEventDTO(this, gameId));
+        gameStartedListener.onApplicationEvent(new GameStartedEventDTO(this, gameId, LEVEL));
 
         then(initializeScore).should().init(new GameId(gameId));
     }
