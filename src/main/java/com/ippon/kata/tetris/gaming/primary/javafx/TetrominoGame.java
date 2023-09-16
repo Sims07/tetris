@@ -1,8 +1,12 @@
 package com.ippon.kata.tetris.gaming.primary.javafx;
 
 import com.ippon.kata.tetris.TetrisApplication;
+import com.ippon.kata.tetris.executing.primary.spring.BoardAPI;
 import com.ippon.kata.tetris.gaming.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.usecase.TetrisGameStartUseCase;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
+import com.ippon.kata.tetris.shared.secondary.spring.model.BoardDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -23,19 +27,26 @@ public class TetrominoGame extends Application {
   private static final int BLOCK_SIZE = 20; // block size to render on screen
   public static final String TITLE = "Tetromino";
   private ConfigurableApplicationContext applicationContext;
+  private BoardAPI boardAPI;
+  private GameId gameId;
+  private TetrisGameStartUseCase tetrisGameStartUseCase;
+
   @Override
   public void init() {
     applicationContext = new SpringApplicationBuilder(TetrisApplication.class).run();
+    boardAPI = applicationContext.getBean(BoardAPI.class);
+    tetrisGameStartUseCase = applicationContext.getBean(TetrisGameStartUseCase.class);
   }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     GraphicsContext graphicsContext = initCanvas(primaryStage);
-
-    final TetrisGameStartUseCase tetrisGameStartUseCase = applicationContext.getBean(TetrisGameStartUseCase.class);
     startGame(tetrisGameStartUseCase);
 
     renderBoard(graphicsContext);
-    applicationContext.addApplicationListener((ApplicationListener<TetrominoMovedEventDTO>) event -> Platform.runLater(()-> renderTetromino(graphicsContext, event)));
+    applicationContext.addApplicationListener(
+        (ApplicationListener<TetrominoMovedEventDTO>)
+            event -> Platform.runLater(() -> renderTetromino(graphicsContext, event)));
 
     primaryStage.show();
   }
@@ -53,20 +64,12 @@ public class TetrominoGame extends Application {
 
   private void renderTetromino(GraphicsContext graphicsContext, TetrominoMovedEventDTO event) {
     renderBoard(graphicsContext);
-    graphicsContext.setFill( switch (event.shapeType()){
-      case I -> Color.YELLOW;
-      case J -> Color.RED;
-      case L -> Color.BLUE;
-      case O -> Color.ORANGE;
-      case S -> Color.GREEN;
-      case T -> Color.PINK;
-      case Z -> Color.PURPLE;
-    });
+    setTetrominoFillColor(graphicsContext, event.shapeType());
     event
         .positions()
         .forEach(
             positionDTO -> {
-              System.out.println("Positions:"+positionDTO);
+              System.out.println("Positions:" + positionDTO);
               graphicsContext.fillRect(
                   positionDTO.y() * BLOCK_SIZE,
                   positionDTO.x() * BLOCK_SIZE,
@@ -80,8 +83,50 @@ public class TetrominoGame extends Application {
             });
   }
 
-  private static void renderBoard(GraphicsContext graphicsContext) {
-    // Render the board
+  private void renderBoard(GraphicsContext graphicsContext) {
+    renderEmptyBoard(graphicsContext);
+    if (gameId != null) {
+      final BoardDTO board = boardAPI.booard(gameId.value());
+      board
+          .slots()
+          .forEach(
+              (key, value) ->
+                  value.ifPresent(
+                      tetrominoDTO -> {
+                          setTetrominoFillColor(graphicsContext, tetrominoDTO.shape());
+                          tetrominoDTO
+                            .positions()
+                            .forEach(
+                                positionDTO -> {
+                                  graphicsContext.fillRect(
+                                      positionDTO.y() * BLOCK_SIZE,
+                                      positionDTO.x() * BLOCK_SIZE,
+                                      BLOCK_SIZE,
+                                      BLOCK_SIZE);
+                                  graphicsContext.strokeRect(
+                                      positionDTO.y() * BLOCK_SIZE,
+                                      positionDTO.x() * BLOCK_SIZE,
+                                      BLOCK_SIZE,
+                                      BLOCK_SIZE);
+                                });
+                      }));
+    }
+  }
+
+    private static void setTetrominoFillColor(GraphicsContext graphicsContext, ShapeType shape) {
+        graphicsContext.setFill(
+            switch (shape) {
+              case I -> Color.YELLOW;
+              case J -> Color.RED;
+              case L -> Color.BLUE;
+              case O -> Color.ORANGE;
+              case S -> Color.GREEN;
+              case T -> Color.PINK;
+              case Z -> Color.PURPLE;
+            });
+    }
+
+    private static void renderEmptyBoard(GraphicsContext graphicsContext) {
     for (int i = 0; i < WIDTH; i++) {
       for (int j = 0; j < HEIGHT; j++) {
         graphicsContext.setFill(Color.GRAY);
@@ -91,18 +136,19 @@ public class TetrominoGame extends Application {
     }
   }
 
-  private static void startGame(TetrisGameStartUseCase tetrisGameStartUseCase) {
+  private void startGame(TetrisGameStartUseCase tetrisGameStartUseCase) {
     Task<GameStartedEvent> task =
         new Task<>() {
           @Override
           protected GameStartedEvent call() {
-            return tetrisGameStartUseCase.start();
+            final GameStartedEvent gameStartedEvent = tetrisGameStartUseCase.start();
+            gameId = gameStartedEvent.gameId();
+            return gameStartedEvent;
           }
         };
     Thread th = new Thread(task);
     th.setDaemon(true);
     th.start();
-    tetrisGameStartUseCase.start();
   }
 
   @Override
