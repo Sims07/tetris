@@ -2,8 +2,8 @@ package com.ippon.kata.tetris.preparing.primary.spring;
 
 import com.ippon.kata.tetris.gaming.secondary.spring.GameStartedEventDTO;
 import com.ippon.kata.tetris.preparing.domain.GenerateNextTetrominoUseCase;
-import com.ippon.kata.tetris.shared.GameId;
-import com.ippon.kata.tetris.shared.TetrominoPickedEventDTO;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoPickedEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;

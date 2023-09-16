@@ -2,7 +2,7 @@ package com.ippon.kata.tetris.preparing.primary.spring;
 
 import com.ippon.kata.tetris.gaming.secondary.spring.GameStartedEventDTO;
 import com.ippon.kata.tetris.preparing.domain.GenerateNextTetromino;
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

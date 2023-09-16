@@ -1,8 +1,8 @@
 package com.ippon.kata.tetris.executing.domain;
 
 import com.ippon.kata.tetris.executing.usecase.InitializeBoardUseCase;
-import com.ippon.kata.tetris.shared.EventPublisher;
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

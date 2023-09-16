@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris.executing.domain;
 
-import com.ippon.kata.tetris.shared.Direction;
+import com.ippon.kata.tetris.shared.domain.Direction;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;

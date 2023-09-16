@@ -3,9 +3,9 @@ package com.ippon.kata.tetris.executing.domain;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 
-import com.ippon.kata.tetris.shared.Direction;
-import com.ippon.kata.tetris.shared.GameId;
-import com.ippon.kata.tetris.shared.ShapeType;
+import com.ippon.kata.tetris.shared.domain.Direction;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;

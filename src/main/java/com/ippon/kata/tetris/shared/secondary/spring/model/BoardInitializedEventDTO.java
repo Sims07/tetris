@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.shared;
+package com.ippon.kata.tetris.shared.secondary.spring.model;
 
 import com.ippon.kata.tetris.executing.domain.BoardInitializedEvent;
 import java.util.UUID;

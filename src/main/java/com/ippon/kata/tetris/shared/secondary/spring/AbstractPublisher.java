@@ -1,6 +1,5 @@
 package com.ippon.kata.tetris.shared.secondary.spring;
 
-import com.ippon.kata.tetris.shared.EventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 
 public abstract class AbstractPublisher<DTO, D> implements EventPublisher<D> {

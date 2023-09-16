@@ -1,8 +1,8 @@
 package com.ippon.kata.tetris.executing.domain;
 
 import com.ippon.kata.tetris.executing.usecase.FallTetrominoUseCase;
-import com.ippon.kata.tetris.shared.Direction;
-import com.ippon.kata.tetris.shared.EventPublisher;
+import com.ippon.kata.tetris.shared.domain.Direction;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 
 public class FallTetromino implements FallTetrominoUseCase {
 

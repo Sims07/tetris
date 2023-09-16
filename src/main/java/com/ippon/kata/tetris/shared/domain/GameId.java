@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.shared;
+package com.ippon.kata.tetris.shared.domain;
 
 import java.util.UUID;
 

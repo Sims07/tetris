@@ -6,9 +6,9 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.BDDMockito.given;
 
 import com.ippon.kata.tetris.gaming.Games;
-import com.ippon.kata.tetris.shared.EventPublisher;
-import com.ippon.kata.tetris.shared.GameId;
-import com.ippon.kata.tetris.shared.ShapeType;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

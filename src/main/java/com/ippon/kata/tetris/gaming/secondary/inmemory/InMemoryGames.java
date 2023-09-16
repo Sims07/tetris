@@ -2,7 +2,7 @@ package com.ippon.kata.tetris.gaming.secondary.inmemory;
 
 import com.ippon.kata.tetris.gaming.Games;
 import com.ippon.kata.tetris.gaming.domain.Game;
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;

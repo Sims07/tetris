@@ -2,7 +2,7 @@ package com.ippon.kata.tetris.scoring.primary.spring;
 
 import com.ippon.kata.tetris.gaming.secondary.spring.GameStartedEventDTO;
 import com.ippon.kata.tetris.scoring.usecase.InitializeScoreUseCase;
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;

@@ -3,7 +3,7 @@ package com.ippon.kata.tetris.gaming.domain;
 import static com.ippon.kata.tetris.gaming.domain.RoundStatus.IDLE;
 import static org.assertj.core.api.BDDAssertions.then;
 
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 

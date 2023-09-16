@@ -1,8 +1,8 @@
 package com.ippon.kata.tetris.preparing.domain;
 
 import com.ippon.kata.tetris.preparing.secondary.spring.TetrominoGeneratedPublisher;
-import com.ippon.kata.tetris.shared.EventPublisher;
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

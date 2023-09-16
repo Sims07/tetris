@@ -3,10 +3,8 @@ package com.ippon.kata.tetris.gaming.primary.shell;
 import com.ippon.kata.tetris.executing.usecase.MoveTetrominoUseCase;
 import com.ippon.kata.tetris.gaming.domain.GameStartedEvent;
 import com.ippon.kata.tetris.gaming.usecase.TetrisGameStartUseCase;
-import com.ippon.kata.tetris.shared.Direction;
+import com.ippon.kata.tetris.shared.domain.Direction;
 import java.util.Scanner;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +17,7 @@ public class TetrominoShell {
         this.moveTetrominoUseCase = moveTetrominoUseCase;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+    //@EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
         final GameStartedEvent gameStartedEvent = tetrisGameStartUseCase.start();
         Scanner scanner = new Scanner(System.in);

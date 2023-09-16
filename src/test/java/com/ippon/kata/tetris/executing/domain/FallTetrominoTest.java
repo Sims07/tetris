@@ -4,10 +4,10 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-import com.ippon.kata.tetris.shared.Direction;
-import com.ippon.kata.tetris.shared.EventPublisher;
-import com.ippon.kata.tetris.shared.GameId;
-import com.ippon.kata.tetris.shared.ShapeType;
+import com.ippon.kata.tetris.shared.domain.Direction;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

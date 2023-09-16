@@ -10,11 +10,12 @@ import com.ippon.kata.tetris.gaming.domain.Game;
 import com.ippon.kata.tetris.gaming.domain.Round;
 import com.ippon.kata.tetris.gaming.domain.Tetromino;
 import com.ippon.kata.tetris.gaming.usecase.StartNextRoundUseCase;
-import com.ippon.kata.tetris.shared.BoardInitializedEventDTO;
-import com.ippon.kata.tetris.shared.Direction;
-import com.ippon.kata.tetris.shared.GameId;
-import com.ippon.kata.tetris.shared.ShapeType;
-import com.ippon.kata.tetris.shared.TetrominoMovedEventDTO;
+import com.ippon.kata.tetris.shared.domain.Direction;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
+import com.ippon.kata.tetris.shared.secondary.spring.model.BoardInitializedEventDTO;
+import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;
+import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,8 +60,8 @@ class GameListenerTest {
             ShapeType.L,
             Direction.DOWN,
             true,
-            true
-        ));
+            true,
+            Collections.emptyList()));
         
         then(nextRoundUseCase).should(never()).start(gameId, ShapeType.S);
     }

@@ -1,8 +1,8 @@
 package com.ippon.kata.tetris.executing.secondary.spring;
 
 import com.ippon.kata.tetris.executing.domain.TetrominoPickedEvent;
-import com.ippon.kata.tetris.shared.TetrominoPickedEventDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.AbstractPublisher;
+import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoPickedEventDTO;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 

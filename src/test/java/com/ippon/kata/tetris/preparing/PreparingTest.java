@@ -5,7 +5,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import com.ippon.kata.tetris.preparing.domain.Tetromino;
 import com.ippon.kata.tetris.preparing.domain.TetrominoGeneratedEvent;
 import com.ippon.kata.tetris.preparing.domain.TetrominoGenerator;
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

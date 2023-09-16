@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.preparing.domain;
 
-import com.ippon.kata.tetris.shared.GameId;
-import com.ippon.kata.tetris.shared.ShapeType;
+import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
 import java.util.Optional;
 import java.util.Random;
 

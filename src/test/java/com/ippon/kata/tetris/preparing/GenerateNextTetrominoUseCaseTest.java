@@ -6,7 +6,7 @@ import com.ippon.kata.tetris.preparing.domain.GenerateNextTetromino;
 import com.ippon.kata.tetris.preparing.domain.GenerateNextTetrominoUseCase;
 import com.ippon.kata.tetris.preparing.domain.TetrominoGeneratedEvent;
 import com.ippon.kata.tetris.preparing.secondary.spring.TetrominoGeneratedPublisher;
-import com.ippon.kata.tetris.shared.GameId;
+import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

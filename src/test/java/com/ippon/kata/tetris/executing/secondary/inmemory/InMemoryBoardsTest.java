@@ -4,9 +4,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import com.ippon.kata.tetris.executing.domain.Board;
 import com.ippon.kata.tetris.executing.domain.BoardId;
-import com.ippon.kata.tetris.shared.GameId;
-import java.util.HashMap;
-import java.util.Optional;
+import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 

@@ -27,7 +27,7 @@ import com.ippon.kata.tetris.scoring.domain.InitializeScore;
 import com.ippon.kata.tetris.scoring.domain.ScoreInitializedEvent;
 import com.ippon.kata.tetris.scoring.domain.Scores;
 import com.ippon.kata.tetris.scoring.usecase.InitializeScoreUseCase;
-import com.ippon.kata.tetris.shared.EventPublisher;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

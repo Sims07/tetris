@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris.executing.domain;
 
-import com.ippon.kata.tetris.shared.ShapeType;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
 import java.util.List;
 
 public record Shape(ShapeType shapeType) {

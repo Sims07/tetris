@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.gaming.secondary.spring;
 
 import com.ippon.kata.tetris.gaming.domain.GameStartedEvent;
-import com.ippon.kata.tetris.shared.EventPublisher;
+import com.ippon.kata.tetris.shared.secondary.spring.EventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 

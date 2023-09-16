@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.shared;
+package com.ippon.kata.tetris.shared.secondary.spring;
 
 public interface EventPublisher<T> {
 
