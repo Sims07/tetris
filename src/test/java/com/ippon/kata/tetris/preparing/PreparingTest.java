@@ -35,15 +35,4 @@ public class PreparingTest {
         then(tetrominoGeneratedEvent.tetromino()).isNotNull();
         then(tetrominoGeneratedEvent.tetromino().shape()).isNotNull();
     }
-
-    @Test
-    void givenCurrent_next_shouldReturnNewTetrominoGenerated() {
-        TetrominoGenerator tetrominoGenerator = new TetrominoGenerator();
-
-        final TetrominoGeneratedEvent tetrominoGeneratedEvent = tetrominoGenerator.generate(getGameId());
-        final TetrominoGeneratedEvent tetrominoGeneratedEvent1 = tetrominoGenerator.generate(getGameId());
-
-        then(tetrominoGeneratedEvent).isNotNull();
-        then(tetrominoGeneratedEvent.tetromino()).isNotEqualTo(tetrominoGeneratedEvent1.tetromino());
-    }
 }

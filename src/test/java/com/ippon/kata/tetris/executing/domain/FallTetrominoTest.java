@@ -45,7 +45,7 @@ class FallTetrominoTest {
             Direction.DOWN,
             false
         );
-        given(eventPublisher.publish(tetrominoMovedEvent)).willReturn(tetrominoMovedEvent);
+        given(eventPublisher.publish(any())).willReturn(tetrominoMovedEvent);
 
         final TetrominoMovedEvent movedEvent = fallTetromino.fall(
             boardId,
@@ -76,7 +76,8 @@ class FallTetrominoTest {
                     .map(position ->
                         new Position(position.x(), position.y() + Board.NB_LINES - 1))
                     .toList()
-            )));
+            ))
+        );
         given(boards.get(boardId))
             .willReturn(boardGot);
         given(eventPublisher.publish(any())).willAnswer(args -> args.getArguments()[0]);

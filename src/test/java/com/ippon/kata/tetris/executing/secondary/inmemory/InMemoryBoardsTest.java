@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test;
 
 class InMemoryBoardsTest {
 
+    public static final int SPEED_MS = 100;
+
     @Test
     void save() {
         final InMemoryBoards inMemoryBoards = new InMemoryBoards();
         final BoardId boardId = new BoardId(new GameId(UUID.randomUUID()));
         inMemoryBoards.save(new Board(
-                boardId,
-                new HashMap<>(),
-                Optional.empty()
+                boardId
             )
         );
 

@@ -14,7 +14,7 @@ class TetrisApplicationTests {
     @Test
     void startGame() throws InterruptedException {
         tetrisGameStartUseCase.start();
-        Thread.sleep(500000);
+        Thread.sleep(10000);
     }
 
 }

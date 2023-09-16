@@ -1,5 +1,6 @@
 package com.ippon.kata.tetris.scoring.primary.spring;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import com.ippon.kata.tetris.gaming.secondary.spring.GameStartedEventDTO;
@@ -10,7 +11,6 @@ import com.ippon.kata.tetris.shared.GameId;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameStartedListenerTest {
 
+    public static final int SPEED_MS = 100;
     @InjectMocks
     PreparingGameStartedListener gameStartedListener;
     @Mock
@@ -26,7 +27,7 @@ class GameStartedListenerTest {
     @Test
     void givenGameStarted_onApplicationEvent_initializeScore() {
         final UUID gameId = UUID.randomUUID();
-        BDDMockito.given(initializeScore.init(new GameId(gameId))).willReturn(new ScoreInitializedEvent(
+        given(initializeScore.init(new GameId(gameId))).willReturn(new ScoreInitializedEvent(
             new Score(
                 new GameId(gameId),
                 0

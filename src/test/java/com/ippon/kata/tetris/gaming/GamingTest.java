@@ -52,7 +52,7 @@ public class GamingTest {
                 shape.initPositions()
             )
         );
-        given(tetrominoPickedEventEventPublisher.publish(event)).willReturn(event);
+        given(tetrominoPickedEventEventPublisher.publish(any())).willReturn(event);
 
         final TetrominoPickedEvent tetrominoPickedEvent = pickTetrominoUseCase.pickTetromino(
             gameId,

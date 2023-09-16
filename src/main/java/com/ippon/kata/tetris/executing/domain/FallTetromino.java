@@ -3,12 +3,9 @@ package com.ippon.kata.tetris.executing.domain;
 import com.ippon.kata.tetris.executing.usecase.FallTetrominoUseCase;
 import com.ippon.kata.tetris.shared.Direction;
 import com.ippon.kata.tetris.shared.EventPublisher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FallTetromino implements FallTetrominoUseCase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FallTetromino.class);
     private final EventPublisher<TetrominoMovedEvent> eventPublisher;
     private final Boards boards;
 
@@ -23,7 +20,7 @@ public class FallTetromino implements FallTetrominoUseCase {
         Tetromino tetromino) {
         try {
             final Board board = boards.get(boardId);
-            final Board boardToSave = board.fallTetromino(tetromino);
+            final Board boardToSave = board.move(tetromino, Direction.DOWN);
             final Board savedBoard = boards.save(boardToSave);
             return eventPublisher.publish(new TetrominoMovedEvent(
                 boardId.gameId(),
