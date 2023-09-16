@@ -8,6 +8,7 @@ import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.GameEndedException;
 import com.ippon.kata.tetris.gaming.application.domain.GameStatus;
+import com.ippon.kata.tetris.shared.domain.ShapeType;
 import org.junit.jupiter.api.Test;
 
 class GameTest {
@@ -47,5 +48,19 @@ class GameTest {
     final Game game = game(true, true, true);
 
     thenThrownBy(game::newRound).isInstanceOf(GameEndedException.class);
+  }
+
+  @Test
+  void givenEndedGame_finishRound_shouldThrowException() {
+    final Game game = game(true, true, true);
+
+    thenThrownBy(game::finishRound).isInstanceOf(GameEndedException.class);
+  }
+
+  @Test
+  void givenEndedGame_tetrominoGenerated_shouldThrowException() {
+    final Game game = game(true, true, true);
+
+    thenThrownBy(() -> game.tetrominoGenerated(ShapeType.S)).isInstanceOf(GameEndedException.class);
   }
 }

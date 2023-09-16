@@ -28,6 +28,7 @@ public class ExecutingGameStartedListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ExecutingGameStartedListener.class);
   public static final int GAME_SPEED = 1000;
+  public static final int MAX_FALLING_STEP = 30;
   private final InitializeBoardUseCase initializeBoardUseCase;
   private final PickTetrominoUseCase pickTetrominoUseCase;
   private final FallTetrominoUseCase fallTetrominoUseCase;
@@ -64,15 +65,22 @@ public class ExecutingGameStartedListener {
     LOGGER.info("EXECUTING : Receive next round started {}", event.gameId());
     final GameId gameId = new GameId(event.gameId());
     eraseCompletedLines(gameId);
-    RoundIndex roundIndex = roundIndexes.add(new RoundIndex(event.roundIndex()));
+    RoundIndex roundIndex =
+        roundIndexes.add(new RoundIndex(event.roundIndex(), new GameId(event.gameId())));
 
     final TetrominoPickedEvent tetrominoPickedEvent =
         pickTetrominoUseCase.pickTetromino(gameId, ShapeType.valueOf(event.shapeType()));
     fallTetrominoUseCase.fall(new BoardId(gameId), tetrominoPickedEvent.tetromino());
-    while (roundIndex.equals(currentRoundIndex())) {
+    int fallingStep = 0;
+    while (roundNotEnded(event, roundIndex) && fallingStep < MAX_FALLING_STEP) {
       applicationEventPublisher.publishEvent(new MoveTetrominoCmd(this, gameId, Direction.DOWN));
+      fallingStep++;
       Thread.sleep(new Speed(new Level(event.level())).value());
     }
+  }
+
+  private boolean roundNotEnded(NextRoundStartedEventDTO event, RoundIndex roundIndex) {
+    return roundIndex.equals(currentRoundIndex(new GameId(event.gameId())));
   }
 
   private void eraseCompletedLines(GameId gameId) {
@@ -82,7 +90,7 @@ public class ExecutingGameStartedListener {
     }
   }
 
-  private RoundIndex currentRoundIndex() {
-    return roundIndexes.get();
+  private RoundIndex currentRoundIndex(GameId gameId) {
+    return roundIndexes.get(gameId);
   }
 }

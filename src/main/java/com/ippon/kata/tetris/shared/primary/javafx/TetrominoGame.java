@@ -22,6 +22,7 @@ import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicReference;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -35,12 +36,14 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
 public class TetrominoGame extends Application {
-
+  private static final Logger LOGGER = LoggerFactory.getLogger(TetrominoGame.class);
   private static final int WIDTH = 10;
   private static final int HEIGHT = 22;
   private static final int BLOCK_SIZE = 40;
@@ -54,7 +57,7 @@ public class TetrominoGame extends Application {
   private ConfigurableApplicationContext applicationContext;
   private BoardAPI boardAPI;
   private TetrominoAPI tetrominoAPI;
-  private GameId gameId;
+  private AtomicReference<GameId> gameId;
   private TetrisGameStartUseCase tetrisGameStartUseCase;
   private MediaPlayer mediaPlayer;
   private final LevelRenderer levelRenderer;
@@ -80,6 +83,7 @@ public class TetrominoGame extends Application {
     boardAPI = applicationContext.getBean(BoardAPI.class);
     tetrisGameStartUseCase = applicationContext.getBean(TetrisGameStartUseCase.class);
     tetrominoAPI = applicationContext.getBean(TetrominoAPI.class);
+    gameId = new AtomicReference<>();
   }
 
   @Override
@@ -91,7 +95,6 @@ public class TetrominoGame extends Application {
     startButtonRenderer.render(graphicsContext, null);
 
     startGame();
-    renderBoard(graphicsContext);
     playTetrisThemeMusic();
 
     primaryStage.show();
@@ -112,7 +115,9 @@ public class TetrominoGame extends Application {
   private void registerListeners(GraphicsContext graphicsContext) {
     applicationContext.addApplicationListener(
         (ApplicationListener<TetrominoMovedEventDTO>)
-            event -> Platform.runLater(() -> renderBoard(graphicsContext)));
+            event ->
+                Platform.runLater(
+                    () -> renderBoard(graphicsContext, event)));
     applicationContext.addApplicationListener(
         (ApplicationListener<ScoreUpdatedEventDTO>)
             event -> Platform.runLater(() -> scoreRenderer.render(graphicsContext, event)));
@@ -145,10 +150,10 @@ public class TetrominoGame extends Application {
     scene.setOnKeyPressed(
         event -> {
           switch (event.getCode()) {
-            case DOWN -> tetrominoAPI.move(gameId, Direction.DOWN);
-            case LEFT -> tetrominoAPI.move(gameId, Direction.LEFT);
-            case RIGHT -> tetrominoAPI.move(gameId, Direction.RIGHT);
-            case SPACE -> tetrominoAPI.move(gameId, Direction.ROTATE);
+            case DOWN -> tetrominoAPI.move(gameId(), Direction.DOWN);
+            case LEFT -> tetrominoAPI.move(gameId(), Direction.LEFT);
+            case RIGHT -> tetrominoAPI.move(gameId(), Direction.RIGHT);
+            case SPACE -> tetrominoAPI.move(gameId(), Direction.ROTATE);
           }
         });
     scene.setOnMouseClicked(this::onMouseClicked);
@@ -159,20 +164,29 @@ public class TetrominoGame extends Application {
     return gc;
   }
 
+  private GameId gameId() {
+    return gameId.get();
+  }
+
   private void onMouseClicked(MouseEvent mouseEvent) {
     if (inXStartButtonRange(mouseEvent) && inYStartButtonRange(mouseEvent)) {
       startGame();
     }
   }
 
-  private void renderBoard(GraphicsContext graphicsContext) {
-    if (gameId != null) {
-      boardRenderer.render(graphicsContext, boardAPI.booard(gameId.value()));
+  private void renderBoard(GraphicsContext graphicsContext, TetrominoMovedEventDTO event) {
+    if (gameId() != null && gameId().value().equals(event.gameId())) {
+      LOGGER.info("SHARED : receive tetromino moved {},{}", gameId(), event);
+      renderBoard(graphicsContext);
     }
   }
 
+  private void renderBoard(GraphicsContext graphicsContext) {
+    boardRenderer.render(graphicsContext, boardAPI.booard(gameId().value()));
+  }
+
   private void startGame() {
-    gameId = null;
+    gameId.set(null);
     if (startGameThread != null && startGameThread.isAlive()) {
       startGameThread.interrupt();
     }
@@ -186,7 +200,7 @@ public class TetrominoGame extends Application {
       @Override
       protected GameStartedEvent call() {
         final GameStartedEvent gameStartedEvent = tetrisGameStartUseCase.start();
-        gameId = gameStartedEvent.gameId();
+        gameId.set(gameStartedEvent.gameId());
         return gameStartedEvent;
       }
     };

@@ -29,7 +29,7 @@ public class GameListener {
 
   @Async
   @EventListener
-  public void onApplicationEvent(BoardInitializedEventDTO event) {
+  public synchronized void onApplicationEvent(BoardInitializedEventDTO event) {
     final Game game = games.get(new GameId(event.getGameId()));
     final Game gameSaved =
         games.add(
@@ -40,7 +40,8 @@ public class GameListener {
                 game.currentRound(),
                 game.scoreInitialized(),
                 game.waitingTetromino(),
-                game.settings(), false));
+                game.settings(),
+                false));
     LOGGER.info("GAMING : receive board initialized {}", gameSaved);
     startNextRound(gameSaved);
   }
@@ -69,16 +70,22 @@ public class GameListener {
     LOGGER.info("GAMING : receive tetromino moved {}", event);
     if (event.outOfScope()) {
       LOGGER.info("You loose");
-    } else if (event.tetrominoFixed()) {
+    } else {
       final Game game = games.get(new GameId(event.gameId()));
-      final Game updatedGame = game.finishRound();
-      startNextRound(games.add(updatedGame));
+      if (game.ended()) {
+        LOGGER.info("IGNORE MOVE ENDED BECAUSE game {} is ended", game.id());
+      } else if (event.tetrominoFixed()) {
+        final Game updatedGame = game.finishRound();
+        startNextRound(games.add(updatedGame));
+      }
     }
   }
 
-  private void startNextRound(Game gameSaved) {
-    if (gameSaved.nextRoundAvailable()) {
-      nextRoundUseCase.start(gameSaved.id(), gameSaved.waitingTetromino().shape());
+  private void startNextRound(Game game) {
+    if (game.nextRoundAvailable()) {
+      nextRoundUseCase.start(game.id(), game.waitingTetromino().shape());
+    } else {
+      LOGGER.debug("GAMING :  could not start next round {}", game);
     }
   }
 }

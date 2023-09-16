@@ -28,9 +28,7 @@ public record Game(
 
   public Game newRound() {
     final Round nextRound = currentRound.next();
-    if (ended) {
-      throw new GameEndedException();
-    }
+    assertNotEndedGame();
     return new Game(
         id,
         boardInitialized,
@@ -42,7 +40,21 @@ public record Game(
         ended());
   }
 
+  public Game finishRound() {
+    assertNotEndedGame();
+    return new Game(
+        id,
+        boardInitialized,
+        tetrominoGenerated,
+        new Round(RoundStatus.FINISHED, currentRound.index()),
+        scoreInitialized,
+        waitingTetromino,
+        settings,
+        ended);
+  }
+
   public Game tetrominoGenerated(ShapeType shapeType) {
+    assertNotEndedGame();
     return new Game(
         id,
         boardInitialized,
@@ -54,24 +66,16 @@ public record Game(
         ended);
   }
 
-  private Settings settings(Round nextRound) {
-    return isLevelUp(nextRound) ? settings.increaseLevel() : settings;
-  }
-
-  private static boolean isLevelUp(Round round) {
-    return round.index() > 0 && round.index() % NB_MOVED_BEFORE_LEVEL_UP == 0;
-  }
-
-  public Game finishRound() {
+  public Game end() {
     return new Game(
         id,
         boardInitialized,
         tetrominoGenerated,
-        new Round(RoundStatus.FINISHED, currentRound.index()),
+        currentRound,
         scoreInitialized,
         waitingTetromino,
         settings,
-        ended);
+        true);
   }
 
   public Game initializeScore() {
@@ -86,6 +90,14 @@ public record Game(
         ended);
   }
 
+  private Settings settings(Round nextRound) {
+    return isLevelUp(nextRound) ? settings.increaseLevel() : settings;
+  }
+
+  private static boolean isLevelUp(Round round) {
+    return round.index() > 0 && round.index() % NB_MOVED_BEFORE_LEVEL_UP == 0;
+  }
+
   public boolean nextRoundAvailable() {
     return !ended
         && status() == GameStatus.PLAYING
@@ -93,15 +105,9 @@ public record Game(
         && waitingTetromino() != null;
   }
 
-  public Game end() {
-    return new Game(
-        id,
-        boardInitialized,
-        tetrominoGenerated,
-        currentRound,
-        scoreInitialized,
-        waitingTetromino,
-        settings,
-        true);
+  private void assertNotEndedGame() {
+    if (ended) {
+      throw new GameEndedException();
+    }
   }
 }
