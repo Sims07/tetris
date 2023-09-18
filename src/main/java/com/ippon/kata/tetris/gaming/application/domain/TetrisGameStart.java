@@ -1,12 +1,8 @@
 package com.ippon.kata.tetris.gaming.application.domain;
 
-import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
-
 import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
-import com.ippon.kata.tetris.shared.domain.GameId;
-import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.EventPublisher;
-import java.util.UUID;
+import com.ippon.kata.tetris.shared.domain.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,23 +20,15 @@ public class TetrisGameStart implements TetrisGameStartUseCase {
 
   @Override
   public GameStartedEvent start() {
-    endPreviousGame();
-    final Game startedGame =
-        games.add(
-            new Game(
-                new GameId(UUID.randomUUID()),
-                false,
-                false,
-                new Round(IDLE, 0),
-                false,
-                null,
-                new Settings(new Level(1)),
-                false));
+    endAllGames();
+    final Game startedGame = games.add(Game.newGame());
     LOGGER.info("GAMING : Game started ({})", startedGame.id());
     return eventPublisher.publish(new GameStartedEvent(startedGame.id(), STARTED_LEVEL));
   }
 
-  private void endPreviousGame() {
-    games.list().stream().map(Game::end).forEach(games::update);
+  private void endAllGames() {
+    games.list().stream()
+        .map(game -> games.update(game.id(), Game::end))
+        .forEach(game -> LOGGER.info("{} is ended", game.id()));
   }
 }

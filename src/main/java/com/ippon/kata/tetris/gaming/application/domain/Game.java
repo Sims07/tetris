@@ -1,8 +1,12 @@
 package com.ippon.kata.tetris.gaming.application.domain;
 
+import static com.ippon.kata.tetris.gaming.application.domain.RoundStatus.IDLE;
+
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.domain.asserts.Asserts;
+import java.util.UUID;
 
 public record Game(
     GameId id,
@@ -18,6 +22,18 @@ public record Game(
 
   public Game {
     Asserts.withContext(getClass()).notNull(id, "Game id should not be null");
+  }
+
+  public static Game newGame() {
+    return new Game(
+        new GameId(UUID.randomUUID()),
+        false,
+        false,
+        new Round(IDLE, 0),
+        false,
+        null,
+        new Settings(new Level(1)),
+        false);
   }
 
   public GameStatus status() {

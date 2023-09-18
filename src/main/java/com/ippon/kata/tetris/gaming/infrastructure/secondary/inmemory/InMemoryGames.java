@@ -21,18 +21,10 @@ public class InMemoryGames implements Games {
   }
 
   @Override
-  public Game update(Game game) {
-    if (gameStore.get(game.id()) == null) {
-      throw new IllegalArgumentException("Game should exist to be updated");
-    }
-    return add(game);
+  public Game update(GameId gameId, UnaryOperator<Game> gameUpdatedFunction) {
+    return gameStore.computeIfPresent(
+        gameId, (gameIdToUpdate, gameToUpdate) -> gameUpdatedFunction.apply(gameToUpdate));
   }
-
-  @Override
-  public Game update(GameId gameId, UnaryOperator<Game> updatedFonction) {
-    return gameStore.computeIfPresent(gameId, (gameIdToUpdate, gameToUpdate) -> updatedFonction.apply(gameToUpdate));
-  }
-
 
   @Override
   public Game get(GameId gameId) {

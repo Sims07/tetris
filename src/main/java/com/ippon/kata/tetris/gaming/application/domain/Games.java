@@ -8,9 +8,7 @@ public interface Games {
 
   Game add(Game game);
 
-  Game update(Game game);
-
-  Game update(GameId gameId, UnaryOperator<Game> updatedFonction);
+  Game update(GameId gameId, UnaryOperator<Game> gameUpdatedFunction);
 
   Game get(GameId gameId);
 

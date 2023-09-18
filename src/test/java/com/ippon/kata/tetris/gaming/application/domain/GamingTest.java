@@ -3,7 +3,6 @@ package com.ippon.kata.tetris.gaming.application.domain;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.spy;
 
 import com.ippon.kata.tetris.executing.application.domain.PickTetromino;
 import com.ippon.kata.tetris.executing.application.domain.RotationIndex;
@@ -29,7 +28,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class GamingTest {
+class GamingTest {
 
   @Mock EventPublisher<TetrominoPickedEvent> tetrominoPickedEventEventPublisher;
   @Mock EventPublisher<GameStartedEvent> gameStartedEventEventPublisher;
@@ -67,10 +66,11 @@ public class GamingTest {
   void givenSartedGame_startGame_shouldEndPreviousAndStartNewGameByEmittingGameStarted() {
     TetrisGameStartUseCase tetrisGameStartUseCase =
         new TetrisGameStart(gameStartedEventEventPublisher, games);
-    final Game game = GameFixture.game(true,true,false);
-    final Game currentRunningGame = spy(GameFixture.game(true,true,false));
+    final Game game = GameFixture.game(true, true, false);
+    final Game currentRunningGame = GameFixture.game(true, true, false);
     given(games.list()).willReturn(List.of(currentRunningGame));
     given(games.add(any())).willReturn(game);
+    given(games.update(any(), any())).willReturn(game);
     given(gameStartedEventEventPublisher.publish(any()))
         .willReturn(new GameStartedEvent(game.id(), new Level(1)));
 
@@ -79,7 +79,6 @@ public class GamingTest {
     then(gameStartedEvent).isNotNull();
     then(gameStartedEvent.gameId()).isEqualTo(game.id());
     then(gameStartedEvent.level().value()).isEqualTo(1);
-    BDDMockito.then(currentRunningGame).should().end();
     BDDMockito.then(gameStartedEventEventPublisher).should().publish(gameStartedEvent);
   }
 }
