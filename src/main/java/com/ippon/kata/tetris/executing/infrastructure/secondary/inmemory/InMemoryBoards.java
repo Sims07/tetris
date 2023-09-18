@@ -14,7 +14,7 @@ public class InMemoryBoards implements Boards {
 
   @Override
   public Board save(Board board) {
-    boards.put(board.boardId(), board);
+    boards.put(board.id(), board);
     return board;
   }
 

@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris.shared.domain;
 
-import static com.ippon.kata.tetris.shared.asserts.Asserts.withContext;
+import static com.ippon.kata.tetris.shared.domain.asserts.Asserts.withContext;
 
 public record Level(int value) {
 
@@ -11,6 +11,6 @@ public record Level(int value) {
   }
 
   public Level next() {
-     return new Level(value + OFFSET);
+    return new Level(value + OFFSET);
   }
 }

@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.scoring.application.domain;
 
-import com.ippon.kata.tetris.shared.asserts.Asserts;
 import com.ippon.kata.tetris.shared.domain.GameId;
+import com.ippon.kata.tetris.shared.domain.asserts.Asserts;
 
 public record Score(GameId gameId, int value) {
 

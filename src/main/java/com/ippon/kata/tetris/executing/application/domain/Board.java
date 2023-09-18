@@ -2,8 +2,8 @@ package com.ippon.kata.tetris.executing.application.domain;
 
 import static java.util.stream.Collectors.*;
 
-import com.ippon.kata.tetris.shared.asserts.Asserts;
 import com.ippon.kata.tetris.shared.domain.Direction;
+import com.ippon.kata.tetris.shared.domain.asserts.Asserts;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public record Board(
-    BoardId boardId,
-    Map<Position, Optional<Tetromino>> slots,
-    Optional<Tetromino> fallingTetromino) {
+    BoardId id, Map<Position, Optional<Tetromino>> slots, Optional<Tetromino> fallingTetromino) {
 
   public static final int NB_COLUMNS = 10;
   public static final int NB_LINES = 22;
@@ -29,7 +27,10 @@ public record Board(
   }
 
   public Board {
-    Asserts.withContext(getClass()).notEmpty(slots, "Slots should not be empty");
+    Asserts.withContext(getClass())
+        .notNull(id, "Id should not be null")
+        .notNull(fallingTetromino, "Falling tetromino should not be null")
+        .notEmpty(slots, "Slots should not be empty");
   }
 
   public static Map<Position, Optional<Tetromino>> emptySlots() {
@@ -49,11 +50,11 @@ public record Board(
             .orElse(tetromino);
     if (nextTetrominoPositionAvailable(movedTetromino)) {
       return new Board(
-          boardId, moveTetrominoFromTo(tetromino, movedTetromino), Optional.of(movedTetromino));
+          id, moveTetrominoFromTo(tetromino, movedTetromino), Optional.of(movedTetromino));
     } else {
       throw new TetrominoFixedException(
           tetromino,
-          new Board(boardId, slots(), Optional.empty()),
+          new Board(id, slots(), Optional.empty()),
           tetromino.positions().stream().map(Position::y).anyMatch(x -> x == 0));
     }
   }
@@ -140,7 +141,7 @@ public record Board(
                             updatedBoard2.put(position, slots.get(position));
                           }
                         }));
-    return new Board(boardId, updatedBoard2, fallingTetromino);
+    return new Board(id, updatedBoard2, fallingTetromino);
   }
 
   static IntStream revRange(int from, int to) {

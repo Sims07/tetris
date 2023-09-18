@@ -2,6 +2,7 @@ package com.ippon.kata.tetris.executing.application.domain;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
+import static org.mockito.Mockito.mock;
 
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.Shape;
@@ -13,6 +14,18 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class BoardTest {
+
+  @Test
+  void givenNoBoardId_constructor_shouldThrowException() {
+    thenThrownBy(() -> new Board(null, new HashMap<>(), Optional.empty()))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void givenNullFallingTetromino_constructor_shouldThrowException() {
+    thenThrownBy(() -> new Board(mock(BoardId.class), new HashMap<>(), null))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
 
   @Test
   void givenEmptyBoard_moveDown_shouldBeOnInitPosition() {
@@ -204,9 +217,7 @@ class BoardTest {
   private static Board givenBoardWithTetromino(Tetromino tetromino) {
     final Board initialBoard = BoardFixture.givenNewBoard();
     return new Board(
-        initialBoard.boardId(),
-        slotsWithTetromino(initialBoard, tetromino),
-        Optional.of(tetromino));
+        initialBoard.id(), slotsWithTetromino(initialBoard, tetromino), Optional.of(tetromino));
   }
 
   private static HashMap<Position, Optional<Tetromino>> slotsWithTetromino(

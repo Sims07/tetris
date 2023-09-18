@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris.gaming.application.domain;
 
-import static com.ippon.kata.tetris.shared.asserts.Asserts.withContext;
+import static com.ippon.kata.tetris.shared.domain.asserts.Asserts.withContext;
 
 import com.ippon.kata.tetris.shared.domain.Level;
 
