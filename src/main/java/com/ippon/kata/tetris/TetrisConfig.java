@@ -26,11 +26,11 @@ import com.ippon.kata.tetris.gaming.application.usecase.TetrisGameStartUseCase;
 import com.ippon.kata.tetris.preparing.application.domain.GenerateNextTetromino;
 import com.ippon.kata.tetris.preparing.application.usecase.GenerateNextTetrominoUseCase;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedPublisher;
+import com.ippon.kata.tetris.scoring.application.domain.ComputeScore;
 import com.ippon.kata.tetris.scoring.application.domain.InitializeScore;
 import com.ippon.kata.tetris.scoring.application.domain.Scores;
-import com.ippon.kata.tetris.scoring.application.domain.UpdateScore;
+import com.ippon.kata.tetris.scoring.application.usecase.ComputeScoreUseCase;
 import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
-import com.ippon.kata.tetris.scoring.application.usecase.UpdateScoreUseCase;
 import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -92,7 +92,7 @@ public class TetrisConfig {
   }
 
   @Bean
-  UpdateScoreUseCase updateScoreUseCase(Scores scores) {
-    return new UpdateScore(scores);
+  ComputeScoreUseCase updateScoreUseCase(Scores scores) {
+    return new ComputeScore(scores);
   }
 }

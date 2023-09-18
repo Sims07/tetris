@@ -18,7 +18,7 @@ import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.NextRoundSta
 import com.ippon.kata.tetris.preparing.infrastructure.primary.javafx.NextTetrominoRenderer;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
 import com.ippon.kata.tetris.scoring.infrastructure.primary.javafx.ScoreRenderer;
-import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
+import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreComputedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
@@ -122,7 +122,7 @@ public class TetrominoGame extends Application {
         (ApplicationListener<TetrominoMovedEventDTO>)
             event -> Platform.runLater(() -> renderBoard(graphicsContext, event)));
     applicationContext.addApplicationListener(
-        (ApplicationListener<ScoreUpdatedEventDTO>)
+        (ApplicationListener<ScoreComputedEventDTO>)
             event -> Platform.runLater(() -> scoreRenderer.render(graphicsContext, event)));
     applicationContext.addApplicationListener(
         (ApplicationListener<NextRoundStartedEventDTO>)

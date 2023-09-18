@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.then;
 
 import com.ippon.kata.tetris.gaming.infrastructure.secondary.spring.GameStartedEventDTO;
 import com.ippon.kata.tetris.scoring.application.domain.Score;
-import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
+import com.ippon.kata.tetris.scoring.application.domain.ScoreComputedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.InitializeScoreUseCase;
 import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import com.ippon.kata.tetris.shared.domain.GameId;
@@ -19,25 +19,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameStartedListenerTest {
 
-    public static final int LEVEL = 1;
-    @InjectMocks
-    PreparingGameStartedListener gameStartedListener;
-    @Mock
-    InitializeScoreUseCase initializeScore;
-    @Mock
-    EventPublisher<ScoreUpdatedEvent> eventPublisher;
-    @Test
-    void givenGameStarted_onApplicationEvent_initializeScore() {
-        final UUID gameId = UUID.randomUUID();
-        given(initializeScore.init(new GameId(gameId))).willReturn(new ScoreUpdatedEvent(
-            new Score(
-                new GameId(gameId),
-                0
-            )
-        ));
+  public static final int LEVEL = 1;
+  @InjectMocks PreparingGameStartedListener gameStartedListener;
+  @Mock InitializeScoreUseCase initializeScore;
+  @Mock EventPublisher<ScoreComputedEvent> eventPublisher;
 
-        gameStartedListener.onApplicationEvent(new GameStartedEventDTO(this, gameId, LEVEL));
+  @Test
+  void givenGameStarted_onApplicationEvent_initializeScore() {
+    final UUID gameId = UUID.randomUUID();
+    given(initializeScore.init(new GameId(gameId)))
+        .willReturn(new ScoreComputedEvent(new Score(new GameId(gameId), 0)));
 
-        then(initializeScore).should().init(new GameId(gameId));
-    }
+    gameStartedListener.onApplicationEvent(new GameStartedEventDTO(this, gameId, LEVEL));
+
+    then(initializeScore).should().init(new GameId(gameId));
+  }
 }

@@ -4,7 +4,7 @@ import com.ippon.kata.tetris.gaming.application.domain.Game;
 import com.ippon.kata.tetris.gaming.application.domain.Games;
 import com.ippon.kata.tetris.gaming.application.usecase.StartNextRoundUseCase;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
-import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreUpdatedEventDTO;
+import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreComputedEventDTO;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
 import com.ippon.kata.tetris.shared.secondary.spring.model.BoardInitializedEventDTO;
@@ -30,8 +30,7 @@ public class GameListener {
   @Async
   @EventListener
   public void onApplicationEvent(BoardInitializedEventDTO event) {
-    Game savedGame =
-        games.update(new GameId(event.getGameId()), Game::initializeBoard);
+    Game savedGame = games.update(new GameId(event.getGameId()), Game::initializeBoard);
     LOGGER.info("GAMING : receive board initialized {}", savedGame);
     startNextRound(savedGame);
   }
@@ -40,16 +39,17 @@ public class GameListener {
   @EventListener
   public void onApplicationEvent(TetrominoGeneratedEventDTO event) {
     Game savedGame =
-        games.update(new GameId(event.getGameId()), game -> game.tetrominoGenerated(ShapeType.valueOf(event.getShape())));
+        games.update(
+            new GameId(event.getGameId()),
+            game -> game.tetrominoGenerated(ShapeType.valueOf(event.getShape())));
     LOGGER.info("GAMING : receive tetromino generated  {}", savedGame);
     startNextRound(savedGame);
   }
 
   @Async
   @EventListener
-  public void onApplicationEvent(ScoreUpdatedEventDTO event) {
-    Game savedGame =
-        games.update(new GameId(event.getGameId()), Game::initializeScore);
+  public void onApplicationEvent(ScoreComputedEventDTO event) {
+    Game savedGame = games.update(new GameId(event.getGameId()), Game::initializeScore);
     LOGGER.info("GAMING : receive score initialized {}", savedGame);
     startNextRound(savedGame);
   }

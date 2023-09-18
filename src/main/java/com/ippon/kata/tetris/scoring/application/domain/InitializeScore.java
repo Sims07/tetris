@@ -15,8 +15,8 @@ public class InitializeScore implements InitializeScoreUseCase {
   }
 
   @Override
-  public ScoreUpdatedEvent init(GameId gameId) {
+  public ScoreComputedEvent init(GameId gameId) {
     LOGGER.info("SCORING : Command initialize score");
-    return new ScoreUpdatedEvent(scores.save(new Score(gameId, 0)));
+    return new ScoreComputedEvent(scores.save(new Score(gameId, 0)));
   }
 }

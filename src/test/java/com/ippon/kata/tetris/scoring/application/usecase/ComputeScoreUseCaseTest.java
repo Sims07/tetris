@@ -3,10 +3,10 @@ package com.ippon.kata.tetris.scoring.application.usecase;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
+import com.ippon.kata.tetris.scoring.application.domain.ComputeScore;
 import com.ippon.kata.tetris.scoring.application.domain.Score;
-import com.ippon.kata.tetris.scoring.application.domain.ScoreUpdatedEvent;
+import com.ippon.kata.tetris.scoring.application.domain.ScoreComputedEvent;
 import com.ippon.kata.tetris.scoring.application.domain.Scores;
-import com.ippon.kata.tetris.scoring.application.domain.UpdateScore;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import java.util.UUID;
 import org.assertj.core.api.BDDAssertions;
@@ -18,13 +18,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class UpdateScoreUseCaseTest {
-  UpdateScoreUseCase updateScoreUseCase;
+class ComputeScoreUseCaseTest {
+  ComputeScoreUseCase computeScoreUseCase;
   @Mock Scores scores;
 
   @BeforeEach
   void init() {
-    updateScoreUseCase = new UpdateScore(scores);
+    computeScoreUseCase = new ComputeScore(scores);
   }
 
   enum ExpectedScore {
@@ -55,10 +55,11 @@ class UpdateScoreUseCaseTest {
     given(scores.get(any())).willReturn(new Score(gameId, 0));
     given(scores.save(any())).willAnswer(a -> a.getArguments()[0]);
 
-    final ScoreUpdatedEvent scoreUpdatedEvent = updateScoreUseCase.erasedLines(gameId, expectedScore.nbLineErased, expectedScore.level);
+    final ScoreComputedEvent scoreComputedEvent =
+        computeScoreUseCase.compute(gameId, expectedScore.nbLineErased, expectedScore.level);
 
-    BDDAssertions.then(scoreUpdatedEvent).isNotNull();
-    BDDAssertions.then(scoreUpdatedEvent.score()).isNotNull();
-    BDDAssertions.then(scoreUpdatedEvent.score().value()).isEqualTo(expectedScore.expectedScore);
+    BDDAssertions.then(scoreComputedEvent).isNotNull();
+    BDDAssertions.then(scoreComputedEvent.score()).isNotNull();
+    BDDAssertions.then(scoreComputedEvent.score().value()).isEqualTo(expectedScore.expectedScore);
   }
 }
