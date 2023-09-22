@@ -1,8 +1,8 @@
 package com.ippon.kata.tetris.executing.application.domain;
 
 import com.ippon.kata.tetris.executing.application.usecase.EraseLineUseCase;
-import com.ippon.kata.tetris.shared.domain.Level;
 import com.ippon.kata.tetris.shared.domain.EventPublisher;
+import com.ippon.kata.tetris.shared.domain.Level;
 import java.util.List;
 
 public class EraseLine implements EraseLineUseCase {
