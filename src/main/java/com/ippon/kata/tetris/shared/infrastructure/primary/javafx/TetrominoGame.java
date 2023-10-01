@@ -3,7 +3,7 @@ package com.ippon.kata.tetris.shared.infrastructure.primary.javafx;
 import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer.inXStartButtonRange;
 import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer.inYStartButtonRange;
 
-import com.ippon.kata.tetris.TetrisApplication;
+import com.ippon.kata.tetris.JavaFxTetrisApplication;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.infrastructure.primary.javafx.BoardRenderer;
 import com.ippon.kata.tetris.executing.infrastructure.primary.spring.BoardAPI;
@@ -84,7 +84,7 @@ public class TetrominoGame extends Application {
 
   @Override
   public void init() {
-    applicationContext = new SpringApplicationBuilder(TetrisApplication.class).run();
+    applicationContext = new SpringApplicationBuilder(JavaFxTetrisApplication.class).run();
     boardAPI = applicationContext.getBean(BoardAPI.class);
     tetrisGameStartUseCase = applicationContext.getBean(TetrisGameStartUseCase.class);
     tetrominoAPI = applicationContext.getBean(TetrominoAPI.class);
