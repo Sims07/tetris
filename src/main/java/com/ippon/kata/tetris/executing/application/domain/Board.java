@@ -95,15 +95,17 @@ public record Board(
 
   private Map<Position, Optional<Tetromino>> moveTetrominoFromTo(
       Tetromino tetromino, Tetromino movedTetromino) {
-    final long nbSlotsBefore = slots().values().stream().filter(Optional::isPresent).count();
     LOGGER.info("Move tetromino from {}, to {}", tetromino, movedTetromino);
-    final HashMap<Position, Optional<Tetromino>> updatedSlots = new HashMap<>(slots);
-    tetromino.positions().forEach(position -> updatedSlots.put(position, Optional.empty()));
+    final Map<Position, Optional<Tetromino>> updatedSlots = clearTetrominoFromSlots(tetromino);
     movedTetromino
         .positions()
         .forEach(position -> updatedSlots.put(position, Optional.of(movedTetromino)));
-    final long nbSlotsAfter = updatedSlots.values().stream().filter(Optional::isPresent).count();
-    LOGGER.info("Before move {} after move {}", nbSlotsBefore, nbSlotsAfter);
+    return updatedSlots;
+  }
+
+  private Map<Position, Optional<Tetromino>> clearTetrominoFromSlots(Tetromino tetromino) {
+    final Map<Position, Optional<Tetromino>> updatedSlots = new HashMap<>(slots);
+    tetromino.positions().forEach(position -> updatedSlots.put(position, Optional.empty()));
     return updatedSlots;
   }
 
