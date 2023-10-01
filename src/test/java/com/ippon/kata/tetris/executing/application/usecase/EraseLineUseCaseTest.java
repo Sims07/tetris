@@ -12,6 +12,7 @@ import com.ippon.kata.tetris.executing.application.domain.Boards;
 import com.ippon.kata.tetris.executing.application.domain.EraseLine;
 import com.ippon.kata.tetris.executing.application.domain.LinesErasedEvent;
 import com.ippon.kata.tetris.executing.application.domain.Position;
+import com.ippon.kata.tetris.executing.application.domain.PositionSlot;
 import com.ippon.kata.tetris.executing.application.domain.TetraminoStatus;
 import com.ippon.kata.tetris.executing.application.domain.Tetromino;
 import com.ippon.kata.tetris.executing.application.domain.TetrominoFixture;
@@ -46,15 +47,15 @@ class EraseLineUseCaseTest {
   void givenMoveOneCompleteLine_move_shouldPublishEventWithNbLineErased() {
     final GameId gameId = new GameId(UUID.randomUUID());
     final BoardId boardId = new BoardId(gameId);
-    Map<Position, Optional<Tetromino>> slots = fillLine(Board.emptySlots(), NB_LINES - 1);
+    PositionSlot slots = fillLine(PositionSlot.emptySlots(), NB_LINES - 1);
     slots = fillLine(slots, NB_LINES - 2);
-    final Board board =
-        new Board(boardId, slots, Optional.empty());
+    final Board board = new Board(boardId, slots, Optional.empty());
     given(linesErasedEventEventPublisher.publish(any())).willAnswer(i -> i.getArguments()[0]);
     given(boards.save(any())).willAnswer(i -> i.getArguments()[0]);
     given(boards.get(boardId)).willReturn(board);
 
-    final LinesErasedEvent linesErasedEvent = eraseLineUseCase.eraseCompletedLines(boardId, new Level(1));
+    final LinesErasedEvent linesErasedEvent =
+        eraseLineUseCase.eraseCompletedLines(boardId, new Level(1));
 
     then(linesErasedEvent).isNotNull();
     then(linesErasedEvent.erasedLines().size()).isEqualTo(2);
@@ -62,18 +63,16 @@ class EraseLineUseCaseTest {
     then(linesErasedEvent.erasedLines().get(1).value()).isEqualTo(20);
   }
 
-  private Map<Position, Optional<Tetromino>> fillLine(
-      Map<Position, Optional<Tetromino>> positionOptionalMap, int lineIndexToFill) {
-    Map<Position, Optional<Tetromino>> emptyBoard = new HashMap<>(NB_COLUMNS * NB_LINES);
+  private PositionSlot fillLine(PositionSlot positionOptionalMap, int lineIndexToFill) {
+    Map<Position, Optional<Tetromino>> positionFilledSlots = new HashMap<>(NB_COLUMNS * NB_LINES);
     IntStream.range(0, NB_LINES)
         .forEach(
             i ->
                 IntStream.range(0, NB_COLUMNS)
                     .forEach(
-                        j ->
-                        {
+                        j -> {
                           final Position position = new Position(j, i);
-                          emptyBoard.put(
+                          positionFilledSlots.put(
                               position,
                               i == lineIndexToFill
                                   ? Optional.of(
@@ -81,6 +80,6 @@ class EraseLineUseCaseTest {
                                           ShapeType.L, TetraminoStatus.FIXED))
                                   : positionOptionalMap.get(position));
                         }));
-    return emptyBoard;
+    return new PositionSlot(positionFilledSlots);
   }
 }

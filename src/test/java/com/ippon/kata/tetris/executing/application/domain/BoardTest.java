@@ -17,13 +17,13 @@ class BoardTest {
 
   @Test
   void givenNoBoardId_constructor_shouldThrowException() {
-    thenThrownBy(() -> new Board(null, new HashMap<>(), Optional.empty()))
+    thenThrownBy(() -> new Board(null, new PositionSlot(new HashMap<>()), Optional.empty()))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void givenNullFallingTetromino_constructor_shouldThrowException() {
-    thenThrownBy(() -> new Board(mock(BoardId.class), new HashMap<>(), null))
+    thenThrownBy(() -> new Board(mock(BoardId.class), new PositionSlot(new HashMap<>()), null))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -72,7 +72,8 @@ class BoardTest {
     then(boardUpdated.fallingTetromino().map(Tetromino::status).orElseThrow())
         .isEqualTo(TetraminoStatus.MOVING);
     then(boardUpdated).isNotNull();
-    then(boardUpdated.slots().values().stream().filter(Optional::isPresent).count()).isEqualTo(4);
+    then(boardUpdated.slots().slots().values().stream().filter(Optional::isPresent).count())
+        .isEqualTo(4);
   }
 
   @Test
@@ -220,12 +221,12 @@ class BoardTest {
         initialBoard.id(), slotsWithTetromino(initialBoard, tetromino), Optional.of(tetromino));
   }
 
-  private static HashMap<Position, Optional<Tetromino>> slotsWithTetromino(
-      Board board1, Tetromino movedTetromino) {
-    final HashMap<Position, Optional<Tetromino>> updatedSlots = new HashMap<>(board1.slots());
+  private static PositionSlot slotsWithTetromino(Board board1, Tetromino movedTetromino) {
+    final HashMap<Position, Optional<Tetromino>> updatedSlots =
+        new HashMap<>(board1.slots().slots());
     movedTetromino
         .positions()
         .forEach(position -> updatedSlots.put(position, Optional.of(movedTetromino)));
-    return updatedSlots;
+    return new PositionSlot(updatedSlots);
   }
 }

@@ -4,7 +4,6 @@ import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.Shape;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -42,7 +41,7 @@ public record Tetromino(
     return new Position(initPosition.x() + MOVE_OFFSET, initPosition.y());
   }
 
-  public Tetromino move(Direction direction, Map<Position, Optional<Tetromino>> slots) {
+  public Tetromino move(Direction direction, PositionSlot slots) {
     return switch (direction) {
       case DOWN -> moveDown();
       case LEFT -> moveLeft(slots);
@@ -51,7 +50,7 @@ public record Tetromino(
     };
   }
 
-  private Tetromino rotate(Map<Position, Optional<Tetromino>> slots) {
+  private Tetromino rotate(PositionSlot slots) {
     final List<Position> roratedPositions = rotatedPositions();
     if (cannotRotate(roratedPositions, slots)) {
       return this;
@@ -61,7 +60,7 @@ public record Tetromino(
   }
 
   private boolean cannotRotate(
-      List<Position> roratedPositions, Map<Position, Optional<Tetromino>> slots) {
+      List<Position> roratedPositions, PositionSlot slots) {
     return outOfRange(roratedPositions) || tetrominoTouched(slots, Position::x, roratedPositions);
   }
 
@@ -80,7 +79,7 @@ public record Tetromino(
     return rotatedPositions;
   }
 
-  private Tetromino moveRight(Map<Position, Optional<Tetromino>> slots) {
+  private Tetromino moveRight(PositionSlot slots) {
     if (cannotMoveRight(slots)) {
       return this;
     } else {
@@ -88,7 +87,7 @@ public record Tetromino(
     }
   }
 
-  private Tetromino moveLeft(Map<Position, Optional<Tetromino>> slots) {
+  private Tetromino moveLeft(PositionSlot slots) {
     if (cannotMoveLeft(slots)) {
       return this;
     } else {
@@ -100,24 +99,24 @@ public record Tetromino(
     return positions.stream().anyMatch(position -> position.x() - MOVE_OFFSET < LOW_LIMIT);
   }
 
-  private boolean cannotMoveLeft(Map<Position, Optional<Tetromino>> slots) {
+  private boolean cannotMoveLeft(PositionSlot slots) {
     return borderLeftTouched() || tetrominoLeftTouched(slots);
   }
 
-  private boolean tetrominoLeftTouched(Map<Position, Optional<Tetromino>> slots) {
+  private boolean tetrominoLeftTouched(PositionSlot slots) {
     return tetrominoTouched(slots, position -> position.x() - MOVE_OFFSET, positions);
   }
 
-  private boolean cannotMoveRight(Map<Position, Optional<Tetromino>> slots) {
+  private boolean cannotMoveRight(PositionSlot slots) {
     return borderRightTouched() || tetrominoRightTouched(slots);
   }
 
-  private boolean tetrominoRightTouched(Map<Position, Optional<Tetromino>> slots) {
+  private boolean tetrominoRightTouched(PositionSlot slots) {
     return tetrominoTouched(slots, position -> position.x() + MOVE_OFFSET, positions);
   }
 
   private boolean tetrominoTouched(
-      Map<Position, Optional<Tetromino>> slots,
+      PositionSlot slots,
       ToIntFunction<Position> toIntFunction,
       List<Position> positionToCheck) {
     return positionToCheck.stream()
