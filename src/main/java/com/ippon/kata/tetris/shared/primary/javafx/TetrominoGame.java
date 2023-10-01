@@ -25,10 +25,11 @@ import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
 import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -70,7 +71,6 @@ public class TetrominoGame extends Application {
   private final StartButtonRenderer startButtonRenderer;
   private final Canvas canvas;
   private final LostGameRenderer lostGameRenderer;
-  private Thread startGameThread;
 
   public TetrominoGame() {
     levelRenderer = new LevelRenderer();
@@ -213,23 +213,14 @@ public class TetrominoGame extends Application {
 
   private void startGame() {
     gameId.set(null);
-    if (startGameThread != null && startGameThread.isAlive()) {
-      startGameThread.interrupt();
+    try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+      executor.submit(
+          () -> {
+            final GameStartedEvent gameStartedEvent = tetrisGameStartUseCase.start();
+            gameId.set(gameStartedEvent.gameId());
+          });
+      executor.shutdown();
     }
-    startGameThread = new Thread(startGameTask());
-    startGameThread.setDaemon(true);
-    startGameThread.start();
-  }
-
-  private Task<GameStartedEvent> startGameTask() {
-    return new Task<>() {
-      @Override
-      protected GameStartedEvent call() {
-        final GameStartedEvent gameStartedEvent = tetrisGameStartUseCase.start();
-        gameId.set(gameStartedEvent.gameId());
-        return gameStartedEvent;
-      }
-    };
   }
 
   @Override
