@@ -3,7 +3,7 @@ package com.ippon.kata.tetris.preparing.infrastructure.primary.javafx;
 import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.TetrominoGeneratedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Shape;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
-import com.ippon.kata.tetris.shared.primary.javafx.AbstractRenderer;
+import com.ippon.kata.tetris.shared.infrastructure.primary.javafx.AbstractRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

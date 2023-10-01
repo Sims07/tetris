@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.shared.secondary.spring.model;
+package com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model;
 
 import com.ippon.kata.tetris.executing.application.domain.Board;
 import java.util.Map;

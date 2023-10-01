@@ -1,8 +1,8 @@
 package com.ippon.kata.tetris.executing.infrastructure.primary.javafx;
 
-import com.ippon.kata.tetris.shared.primary.javafx.AbstractRenderer;
-import com.ippon.kata.tetris.shared.secondary.spring.model.BoardDTO;
-import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoDTO;
+import com.ippon.kata.tetris.shared.infrastructure.primary.javafx.AbstractRenderer;
+import com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model.BoardDTO;
+import com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model.TetrominoDTO;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

@@ -59,7 +59,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>${javafx-maven-plugin.version}</version>
         <configuration>
-          <mainClass>com.ippon.kata.tetris.shared.primary.javafx.TetrominoGame</mainClass>
+          <mainClass>com.ippon.kata.tetris.shared.infrastructure.primary.javafx.TetrominoGame</mainClass>
         </configuration>
       </plugin>
       <plugin>

@@ -1,7 +1,7 @@
 package com.ippon.kata.tetris.scoring.infrastructure.primary.javafx;
 
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreComputedEventDTO;
-import com.ippon.kata.tetris.shared.primary.javafx.AbstractRenderer;
+import com.ippon.kata.tetris.shared.infrastructure.primary.javafx.AbstractRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

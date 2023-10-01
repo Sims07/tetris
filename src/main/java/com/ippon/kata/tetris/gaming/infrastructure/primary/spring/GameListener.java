@@ -7,8 +7,8 @@ import com.ippon.kata.tetris.preparing.infrastructure.secondary.spring.Tetromino
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreComputedEventDTO;
 import com.ippon.kata.tetris.shared.domain.GameId;
 import com.ippon.kata.tetris.shared.domain.ShapeType;
-import com.ippon.kata.tetris.shared.secondary.spring.model.BoardInitializedEventDTO;
-import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;
+import com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model.BoardInitializedEventDTO;
+import com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model.TetrominoMovedEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;

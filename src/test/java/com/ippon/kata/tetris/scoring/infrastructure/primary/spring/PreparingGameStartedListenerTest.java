@@ -7,7 +7,7 @@ import com.ippon.kata.tetris.scoring.application.domain.ScoreComputedEvent;
 import com.ippon.kata.tetris.scoring.application.usecase.ComputeScoreUseCase;
 import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import com.ippon.kata.tetris.shared.domain.GameId;
-import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
+import com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model.LinesErasedEventDTO;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

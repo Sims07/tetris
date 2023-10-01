@@ -1,6 +1,6 @@
 package com.ippon.kata.tetris;
 
-import com.ippon.kata.tetris.shared.primary.javafx.TetrominoGame;
+import com.ippon.kata.tetris.shared.infrastructure.primary.javafx.TetrominoGame;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javafx.application.Application;

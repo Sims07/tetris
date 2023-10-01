@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.shared.primary.javafx;
+package com.ippon.kata.tetris.shared.infrastructure.primary.javafx;
 
 import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer.inXStartButtonRange;
 import static com.ippon.kata.tetris.gaming.infrastructure.primary.javafx.StartButtonRenderer.inYStartButtonRange;
@@ -21,8 +21,8 @@ import com.ippon.kata.tetris.scoring.infrastructure.primary.javafx.ScoreRenderer
 import com.ippon.kata.tetris.scoring.infrastructure.secondary.spring.ScoreComputedEventDTO;
 import com.ippon.kata.tetris.shared.domain.Direction;
 import com.ippon.kata.tetris.shared.domain.GameId;
-import com.ippon.kata.tetris.shared.secondary.spring.model.LinesErasedEventDTO;
-import com.ippon.kata.tetris.shared.secondary.spring.model.TetrominoMovedEventDTO;
+import com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model.LinesErasedEventDTO;
+import com.ippon.kata.tetris.shared.infrastructure.secondary.spring.model.TetrominoMovedEventDTO;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;

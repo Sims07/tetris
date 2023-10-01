@@ -1,4 +1,4 @@
-package com.ippon.kata.tetris.shared.secondary.spring;
+package com.ippon.kata.tetris.shared.infrastructure.secondary.spring;
 
 import com.ippon.kata.tetris.shared.domain.EventPublisher;
 import org.springframework.context.ApplicationEventPublisher;
