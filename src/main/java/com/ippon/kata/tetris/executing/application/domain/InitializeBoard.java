@@ -20,7 +20,7 @@ public class InitializeBoard implements InitializeBoardUseCase {
   @Override
   public BoardInitializedEvent init(GameId gameId) {
     LOGGER.info("EXECUTING : Command Initialize board");
-    final Board initializedBoard = boards.save(new Board(new BoardId(gameId)));
-    return eventPublisher.publish(new BoardInitializedEvent(initializedBoard.id().gameId()));
+    boards.save(new Board(new BoardId(gameId)));
+    return eventPublisher.publish(new BoardInitializedEvent(gameId));
   }
 }
